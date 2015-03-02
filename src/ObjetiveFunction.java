@@ -32,7 +32,7 @@ public class ObjetiveFunction {
         if (values.length != variables.length) {
             throw new IllegalArgumentException("Invalid number of values. Get " + values.length + " Expect " + variables.length);
         }
-        double result = 0;
+        double result = constant;
         for (int i = 0; i < variables.length; i++) {
             result += (variables[i] * values[i]);
         }
