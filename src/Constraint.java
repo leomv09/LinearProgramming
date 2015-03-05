@@ -4,24 +4,24 @@
  */
 public class Constraint {
     
-    private double[] variables;
+    private double[] coefficients;
     private double constant;
     private Relationship relationship;
     private String name;
 
-    public Constraint(double[] variables, Relationship relationship, double constant, String name) {
-        this.variables = variables;
+    public Constraint(double[] coefficients, Relationship relationship, double constant, String name) {
+        this.coefficients = coefficients;
         this.constant = constant;
         this.relationship = relationship;
         this.name = name;
     }
 
-    public double[] getVariables() {
-        return variables;
+    public double[] getCoefficients() {
+        return coefficients;
     }
 
-    public void setVariables(double[] variables) {
-        this.variables = variables;
+    public void setCoefficients(double[] coefficients) {
+        this.coefficients = coefficients;
     }
 
     public double getConstant() {
