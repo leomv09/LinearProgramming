@@ -1,3 +1,5 @@
+package cr.tec.lpsolver;
+
 /**
  *
  * @author jose
