@@ -1,13 +1,6 @@
 package cr.tec.lpsolver;
 
-
 import java.util.Arrays;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
@@ -15,12 +8,30 @@ import java.util.Arrays;
  */
 public class TransportContext {
     
-    private final String [] consumers;//Name of each consumer.
-    private final String [] producers;//Name of each producer.
-    private double [] productionQuantity;//The total production quantity from all the producers.
-    private double [] demandQuantity;//The total demand quantity from all the producers.
-    private double [][] costTable;//A cost information matrix of transporting products from one place to another.
+    /**
+     * Name of each consumer.
+     */
+    private final String [] consumers;
     
+    /**
+     * Name of each producer.
+     */
+    private final String [] producers;
+    
+    /**
+     * The total production quantity from all the producers.
+     */
+    private double [] productionQuantity;
+    
+    /**
+     * The total demand quantity from all the producers.
+     */
+    private double [] demandQuantity;
+    
+    /**
+     * A cost information matrix of transporting products from one place to another.
+     */
+    private double [][] costTable;
     
     /**
      * Creates a new instance of TransportData.
@@ -83,7 +94,5 @@ public class TransportContext {
     {
         return Arrays.binarySearch(this.consumers, consumer);
     }
-    
-    
     
 }

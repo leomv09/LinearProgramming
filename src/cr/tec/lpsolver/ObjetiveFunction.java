@@ -6,7 +6,18 @@ package cr.tec.lpsolver;
  */
 public class ObjetiveFunction {
 
+    /**
+    * The value of the coefficients assigned to each variable of the function, in order (x, y, z, ...).
+    * Examples:
+    * 5x + y - 9z = {5, 1, -9}
+    * 2y - 1/4z   = {0, 2, 0.25}
+    * 7x          = {7}
+    */
     private double[] coefficients;
+    
+    /**
+     * The constant value of the function.
+     */
     private double constant;
 
     public ObjetiveFunction(double[] coefficients, double constant) {

@@ -6,16 +6,29 @@ package cr.tec.lpsolver;
  */
 public class Constraint {
     
+    /**
+    * The value of the coefficients assigned to each variable of the inequation, in order (x, y, z, ...).
+    * Examples:
+    * 5x + y - 9z = {5, 1, -9}
+    * 2y - 1/4z   = {0, 2, 0.25}
+    * 7x          = {7}
+    */
     private double[] coefficients;
+    
+    /**
+     * The constant value of the inequation.
+     */
     private double constant;
+    
+    /**
+     * The type of the inequation (<=, >=).
+     */
     private Relationship relationship;
-    private String name;
 
-    public Constraint(double[] coefficients, Relationship relationship, double constant, String name) {
+    public Constraint(double[] coefficients, Relationship relationship, double constant) {
         this.coefficients = coefficients;
         this.constant = constant;
         this.relationship = relationship;
-        this.name = name;
     }
 
     public double[] getCoefficients() {
@@ -40,14 +53,6 @@ public class Constraint {
 
     public void setRelationship(Relationship relationship) {
         this.relationship = relationship;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
 }
