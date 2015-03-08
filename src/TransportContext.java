@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * @author Leo
  */
-public class TransportData {
+public class TransportContext {
     
     private final String [] consumers;//Name of each consumer.
     private final String [] producers;//Name of each producer.
@@ -25,7 +25,7 @@ public class TransportData {
      * @param producers A vector of names for the producer variables.
      * @param consumers A vector of names for the consumer variables.
      */
-    public TransportData(String [] producers, String [] consumers)
+    public TransportContext(String [] producers, String [] consumers)
     {
         this.producers = producers;
         this.consumers = consumers;
