@@ -4,12 +4,12 @@ package cr.tec.lpsolver;
  *
  * @author jose
  */
-class PLContext {
+public class LPContext {
     
     private final ObjetiveFunction function;
     private final Constraint[] constraints;
 
-    public PLContext(ObjetiveFunction function, Constraint[] constraints) {
+    public LPContext(ObjetiveFunction function, Constraint[] constraints) {
         this.function = function;
         this.constraints = constraints;
     }
