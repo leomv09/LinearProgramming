@@ -4,7 +4,7 @@ package cr.tec.lpsolver;
  *
  * @author jose
  */
-public class SimplexSolver extends Solver {
+public class SimplexSolver extends ProblemSolver {
 
     @Override
     public Object solve(Object context, ProblemType type) {

@@ -24,7 +24,7 @@ public class TransportContext {
     private double [] productionQuantity;
     
     /**
-     * The total demand quantity from all the producers.
+     * The total demand quantity from all the demanders.
      */
     private double [] demandQuantity;
     

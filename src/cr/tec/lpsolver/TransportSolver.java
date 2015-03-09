@@ -4,7 +4,7 @@ package cr.tec.lpsolver;
  *
  * @author jose
  */
-public class TransportSolver extends Solver {
+public class TransportSolver extends ProblemSolver {
 
     @Override
     public Object solve(Object context, ProblemType type) {
