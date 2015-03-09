@@ -19,37 +19,35 @@ public class LPSolverTest {
      * Test of solve method, of class LPSolver.
      */
     @Test
-    public void test1() {
+    public void minTest() {
         System.out.println("Solve basic LP problem.");
-        System.out.println("MAX z = x + y");
+        System.out.println("MIN z = 600x + 800y");
         System.out.println("Suj:");
-        System.out.println("x <= 4");
-        System.out.println("y <= 4");
-        System.out.println("y >= x/2");
+        System.out.println("40x + 50y ≥ 400");
+        System.out.println("x + y ≤ 9");
 
-        ObjetiveFunction function = new ObjetiveFunction(new double[] {1, 1});
+        ObjetiveFunction function = new ObjetiveFunction(new double[] {600, 800});
         
         Constraint[] constraints = new Constraint[] {
-            new Constraint(new double[] {1}, Relationship.LEQ, 4),
-            new Constraint(new double[] {0, 1}, Relationship.LEQ, 4),
-            new Constraint(new double[] {-0.5, 1}, Relationship.GEQ, 0)
+            new Constraint(new double[] {40, 50}, Relationship.GEQ, 400),
+            new Constraint(new double[] {1, 1}, Relationship.LEQ, 9)
         };
         
         LPContext context = new LPContext(function, constraints);
-        Result result = solver.solve(context, ProblemType.MAX);
+        Result result = solver.solve(context, ProblemType.MIN);
         
         System.out.println(result);
         System.out.println();
         
-        assertEquals(result.getValue(0), 4.0, 0);
-        assertEquals(result.getValue(1), 4.0, 0);
+        assertEquals(result.getValue(0), 5, 0.005);
+        assertEquals(result.getValue(1), 4, 0.005);
     }
     
     /**
      * Test of solve method, of class LPSolver.
      */
     @Test
-    public void test2() {
+    public void maxTest() {
         System.out.println("Solve basic LP problem.");
         System.out.println("MAX z = -2x + 5y");
         System.out.println("Suj:");
@@ -73,8 +71,8 @@ public class LPSolverTest {
         System.out.println(result);
         System.out.println();
         
-        assertEquals(result.getValue(0), 100.0, 0);
-        assertEquals(result.getValue(1), 170.0, 0);
+        assertEquals(result.getValue(0), 100, 0.005);
+        assertEquals(result.getValue(1), 170, 0.005);
     }
     
 }
