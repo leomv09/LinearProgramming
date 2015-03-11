@@ -1,8 +1,7 @@
 package cr.tec.lpsolver;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,38 +13,37 @@ public class TransportProblem {
     /**
      * The name of each consumer.
      */
-    private final List<String> consumers;
+    private String[] consumers;
     
     /**
      * The name of each producer.
      */
-    private final List<String> producers;
+    private String[] producers;
     
     /**
      * The production quantity for each producers.
      */
-    private final List<Double> production;
+    private double[] production;
     
     /**
      * The demand quantity for each consumer.
      */
-    private final List<Double> demand;
+    private double[] demand;
     
     /**
      * A cost information matrix of transporting products from one place to another.
      */
-    private final List<List<Double>> costTable;
+    private double[][] costTable;
     
     /**
      * Constructs a {@code TransportProblem}.
      */
-    public TransportProblem()
-    {
-        this.producers = new ArrayList<>();
-        this.consumers = new ArrayList<>();
-        this.production = new ArrayList<>();
-        this.demand = new ArrayList<>();
-        this.costTable = new ArrayList<>();
+    public TransportProblem() {
+        this.producers = new String[0];
+        this.consumers = new String[0];
+        this.production = new double[0];
+        this.demand = new double[0];
+        this.costTable = new double[0][0];
     }
     
     /**
@@ -54,18 +52,33 @@ public class TransportProblem {
      * @param producer The producer name.
      */
     public void addProducer(String producer) {
-        this.producers.add(producer);
+        // Allocate a new space in the producers array.
+        String[] newProducers = new String[producers.length + 1];
+        System.arraycopy(producers, 0, newProducers, 0, producers.length);
+
+        // Allocate a new space in the production array.
+        double[] newProduction = new double[producers.length + 1];
+        System.arraycopy(production, 0, newProduction, 0, producers.length);
+
+        // Allocate a new row in the cost matrix.
+        double[][] newCostTable = new double[producers.length + 1][consumers.length];
+        System.arraycopy(costTable, 0, newCostTable, 0, producers.length * consumers.length);
         
-        // Fill the cell in the production quantity list with -1.
-        this.production.add(-1.0);
+        // Override arrays.
+        producers = newProducers;
+        production = newProduction;
+        costTable = newCostTable;
         
-        // Fill the new row in the matrix with -1.
-        List<Double> row = new ArrayList<>();
-        consumers.stream().forEach((_item) -> {
-            row.add(-1.0);
-        });
+        // Add producer to the array.
+        producers[producers.length - 1] = producer;
         
-        this.costTable.add(row);
+        // Set production to -1.
+        production[producers.length - 1] = -1.0;
+        
+        // Set the cost to all consumers to -1.
+        for (int j = 0; j< consumers.length; j++) {
+            costTable[producers.length - 1][j] = -1.0;
+        }
     }
     
     /**
@@ -74,7 +87,7 @@ public class TransportProblem {
      * @param producer The producer name.
      * @param production The production quantity.
      */
-    public void addProducer(String producer, Double production) {
+    public void addProducer(String producer, double production) {
         this.addProducer(producer);
         this.setProduction(producer, production);
     }
@@ -85,15 +98,35 @@ public class TransportProblem {
      * @param consumer The consumer name. 
      */
     public void addConsumer(String consumer) {
-        this.consumers.add(consumer);
+        // Allocate a new space in the consumers array.
+        String[] newConsumers = new String[consumers.length + 1];
+        System.arraycopy(consumers, 0, newConsumers, 0, consumers.length);
+
+        // Allocate a new space in the demand array.
+        double[] newDemand = new double[consumers.length + 1];
+        System.arraycopy(demand, 0, newDemand, 0, consumers.length);
         
-        // Fill the cell in the demand quantity list with -1.
-        this.demand.add(-1.0);
+        // Allocate a new space in each row of the cost matrix.
+        for (int i = 0; i < producers.length; i++) {
+            double[] newRow = new double[consumers.length + 1];
+            System.arraycopy(costTable[i], 0, newRow, 0, consumers.length);
+            
+            // Set cost from current producer to -1.
+            newRow[consumers.length] = -1.0;
+            
+            // Override row.
+            costTable[i] = newRow;
+        }
         
-        // Fill the new column in the matrix with -1. 
-        costTable.stream().forEach((row) -> {
-            row.add(-1.0);
-        });
+        // Override arrays.
+        consumers = newConsumers;
+        demand = newDemand;
+        
+        // Add consumer to the array.
+        consumers[consumers.length - 1] = consumer;
+        
+        // Set demand to -1.
+        demand[consumers.length - 1] = -1.0;
     }
     
     /**
@@ -102,7 +135,7 @@ public class TransportProblem {
      * @param consumer The consumer name. 
      * @param demand The demand quantity.
      */
-    public void addConsumer(String consumer, Double demand) {
+    public void addConsumer(String consumer, double demand) {
         this.addConsumer(consumer);
         this.setDemand(consumer, demand);
     }
@@ -113,10 +146,9 @@ public class TransportProblem {
      * @param producer producer's name.
      * @param value the value to be asigned to the producer.
      */
-    public void setProduction(String producer, Double value)
-    {
-        int producerIndex = producers.indexOf(producer);
-        production.set(producerIndex, value);
+    public void setProduction(String producer, double value) {
+        int producerIndex = this.getProducersIndex(producer);
+        production[producerIndex] = value;
     }
     
     /**
@@ -125,10 +157,9 @@ public class TransportProblem {
      * @param consumer consumer's name.
      * @param value the value to be asigned to the consumer.
      */
-    public void setDemand(String consumer, double value)
-    {
-        int consumerIndex = consumers.indexOf(consumer);
-        demand.set(consumerIndex, value);
+    public void setDemand(String consumer, double value) {
+        int consumerIndex = this.getConsumersIndex(consumer);
+        demand[consumerIndex] = value;
     }
     
     /**
@@ -140,10 +171,9 @@ public class TransportProblem {
      */
     public void setCost(String producer, String consumer, double value)
     {
-        int producerIndex = producers.indexOf(producer);
-        int consumerIndex = consumers.indexOf(consumer);
-        List<Double> row = costTable.get(producerIndex);
-        row.set(consumerIndex, value);
+        int producerIndex = this.getProducersIndex(producer);
+        int consumerIndex = this.getConsumersIndex(consumer);
+        costTable[producerIndex][consumerIndex] = value;
     }
 
     /**
@@ -151,7 +181,7 @@ public class TransportProblem {
      * 
      * @return The consumers names.
      */
-    public List<String> getConsumers() {
+    public String[] getConsumers() {
         return consumers;
     }
 
@@ -160,7 +190,7 @@ public class TransportProblem {
      * 
      * @return The producers names.
      */
-    public List<String> getProducers() {
+    public String[] getProducers() {
         return producers;
     }
     
@@ -170,9 +200,9 @@ public class TransportProblem {
      * @param producer The producer name.
      * @return The production quantity or -1 if the producer doesn't have an assigned production.
      */
-    public Double getProduction(String producer) {
-        int producerIndex = producers.indexOf(producer);
-        return production.get(producerIndex);
+    public double getProduction(String producer) {
+        int producerIndex = this.getProducersIndex(producer);
+        return production[producerIndex];
     }
     
     /**
@@ -180,8 +210,8 @@ public class TransportProblem {
      * 
      * @return The total production.
      */
-    public Double getTotalProduction() {
-        Double currentProduction, totalProduction = 0.0;
+    public double getTotalProduction() {
+        double currentProduction, totalProduction = 0.0;
         
         for (String producer : this.producers) {
             currentProduction = this.getProduction(producer);
@@ -199,9 +229,9 @@ public class TransportProblem {
      * 
      * @return The production quantity of each producer.
      */
-    public Map<String, Double> getAllProduction() {
+    public Map<String, Double> getEachProduction() {
         Map<String, Double> allProduction = new HashMap<>();
-        Double currentProduction;
+        double currentProduction;
         
         for (String producer : this.producers) {
             currentProduction = this.getProduction(producer);
@@ -217,9 +247,9 @@ public class TransportProblem {
      * @param consumer The consumer name.
      * @return The demand quantity or -1 if the consumer doesn't have an assigned demand.
      */
-    public Double getDemand(String consumer) {
-        int consumerIndex = consumers.indexOf(consumer);
-        return demand.get(consumerIndex);
+    public double getDemand(String consumer) {
+        int consumerIndex = this.getConsumersIndex(consumer);
+        return demand[consumerIndex];
     }
     
     /**
@@ -227,8 +257,8 @@ public class TransportProblem {
      * 
      * @return The total demand.
      */
-    public Double getTotalDemand() {
-        Double currentDemand, totalDemand = 0.0;
+    public double getTotalDemand() {
+        double currentDemand, totalDemand = 0.0;
         
         for (String consumer : this.consumers) {
             currentDemand = this.getDemand(consumer);
@@ -246,9 +276,9 @@ public class TransportProblem {
      * 
      * @return The demand quantity of each consumer.
      */
-    public Map<String, Double> getAllDemand() {
+    public Map<String, Double> getEachDemand() {
         Map<String, Double> allDemand = new HashMap<>();
-        Double currentDemand;
+        double currentDemand;
         
         for (String consumer : this.consumers) {
             currentDemand = this.getDemand(consumer);
@@ -265,10 +295,50 @@ public class TransportProblem {
      * @param consumer The consumer name.
      * @return The transportation cost.
      */
-    public Double getCost(String producer, String consumer) {
-        int producerIndex = producers.indexOf(producer);
-        int consumerIndex = consumers.indexOf(consumer);
-        return costTable.get(producerIndex).get(consumerIndex);
+    public double getCost(String producer, String consumer) {
+        int producerIndex = this.getProducersIndex(producer);
+        int consumerIndex = this.getConsumersIndex(consumer);
+        return costTable[producerIndex][consumerIndex];
+    }
+    
+    /**
+     * Get the number of producers.
+     * 
+     * @return The number of producers.
+     */
+    public int getProducersCount() {
+        return this.producers.length;
+    }
+    
+    /**
+     * Get the number of consumers.
+     * 
+     * @return The number of consumers.
+     */
+    public int getConsumersCount() {
+        return this.consumers.length;
+    }
+    
+    /**
+     * Obtains an index from the producers's vector.
+     * 
+     * @param producer the name of the producer to search for.
+     * 
+     * @return the index(or space) where the producer is stored. 
+     */
+    private int getProducersIndex(String producer) {
+        return Arrays.binarySearch(this.producers, producer);
+    }
+    
+    /**
+     * Obtains an index from the consumers's vector.
+     * 
+     * @param consumer the name of the consumer to search for.
+     * 
+     * @return the index(or space) where the consumer is stored.
+     */
+    private int getConsumersIndex(String consumer) {
+        return Arrays.binarySearch(this.consumers, consumer);
     }
 
 }
