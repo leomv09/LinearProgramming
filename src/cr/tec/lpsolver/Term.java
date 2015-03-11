@@ -9,7 +9,7 @@ package cr.tec.lpsolver;
 public class Term {
     
     private final String variable;
-    private final Double coefficient;
+    private final double coefficient;
 
     /**
      * Constructs a {@code Term}.
@@ -18,7 +18,7 @@ public class Term {
      * @param coefficient The coefficient.
      *            
      */
-    public Term(String variable, Double coefficient) {
+    public Term(String variable, double coefficient) {
         this.variable = variable;
         this.coefficient = coefficient;
     }
@@ -37,7 +37,7 @@ public class Term {
      * 
      * @return the coefficient
      */
-    public Double getCoefficient() {
+    public double getCoefficient() {
         return coefficient;
     }
 
