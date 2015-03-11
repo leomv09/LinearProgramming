@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The class {@code Linear} is a linear expression consisting of variables and
@@ -19,41 +20,20 @@ public class Linear implements Iterable<Term> {
      * Constructs an empty linear expression.
      */
     public Linear() {
-        super();
         this.terms = new ArrayList<>();
     }
-    
+
     /**
-     * Constructs a linear expression with the predefined variables and their
-     * coefficients.
+     * Returns the variables.
      * 
-     * @param coefficients The coefficients.
-     * @param variables The variables.
+     * @return The variables.
      */
-    public Linear(List<Double> coefficients, List<String> variables) {
-        this();
-        if (coefficients.size() != variables.size()) {
-            throw new IllegalArgumentException("The size of the variables and coefficients must be equal.");
-        } else {
-            for (int i = 0; i < variables.size(); i++) {
-                String variable = variables.get(i);
-                Double coefficient = coefficients.get(i);
-                Term term = new Term(variable, coefficient);
-                this.add(term);
-            }
-        }
-    }
-    
-    /**
-     * Constructs a linear expression from the terms.
-     * 
-     * @param terms The terms to be added
-     */
-    public Linear(Iterable<Term> terms) {
-        this();
-        for (Term term : terms) {
-            this.add(term);
-        }
+    public List<String> getVariables() {
+        List<String> variables = new ArrayList<>();
+        terms.stream().forEach((term) -> {
+            variables.add(term.getVariable());
+        });
+        return variables;
     }
     
     /**
@@ -76,29 +56,16 @@ public class Linear implements Iterable<Term> {
      * @return The coefficient.
      */
     public Double getCoefficient(String variable) {
-        for (Term t : this) {
-            if (t.getVariable().equals(variable)) {
-                return t.getCoefficient();
+        for (Term term : this.terms) {
+            if (term.getVariable().equals(variable)) {
+                return term.getCoefficient();
             }
         }
         return null;
     }
     
     /**
-     * Returns the variables.
-     * 
-     * @return The variables.
-     */
-    public List<String> getVariables() {
-        List<String> variables = new ArrayList<>();
-        terms.stream().forEach((term) -> {
-            variables.add(term.getVariable());
-        });
-        return variables;
-    }
-    
-    /**
-     * Adds an element to the linear expression.
+     * Adds an term to the linear expression.
      * 
      * @param variable The variable.
      * @param coefficient The coefficient.
@@ -144,13 +111,30 @@ public class Linear implements Iterable<Term> {
     }
     
     /**
-     * Returns the {@code i}-th {@code Term}.
+     * Evaluates the equation with a given values.
      * 
-     * @param i The index.
-     * @return The i-th term.
+     * @param values A map that represent the values of the variables in the equation.
+     * 
+     * @return The result.
+     * 
+     * @throws IllegalArgumentException If less or more values than the equation variables are supplied 
+     * or a variable value is missing.
      */
-    public Term get(int i) {
-        return terms.get(i);
+    public double evaluate(Map<String, Double> values) throws IllegalArgumentException {
+        if (values.size() != terms.size()) {
+            throw new IllegalArgumentException("Invalid number of values. Get " + values.size() + " Expect " + terms.size());
+        }
+        double result = 0;
+        for (Term term : terms) {
+            String variable = term.getVariable();
+            if (values.containsKey(variable)) {
+                result += (term.getCoefficient() * values.get(variable));
+            }
+            else {
+                throw new IllegalArgumentException("The variable " + variable + " is missing in the given values.");
+            }
+        }
+        return result;
     }
     
 }

@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class Problem {
 
-    private ObjetiveFunction function;
     private final List<Constraint> constraints;
+    private Linear objetiveFunction;
     private ProblemType type;
 
     /**
@@ -20,6 +20,7 @@ public class Problem {
      */
     public Problem() {
         this.constraints = new ArrayList<>();
+        this.objetiveFunction = new Linear();
         this.type = ProblemType.MAX;
     }
 
@@ -28,17 +29,8 @@ public class Problem {
      * 
      * @return The objective function.
      */
-    public ObjetiveFunction getObjetiveFunction() {
-        return function;
-    }
-
-    /**
-     * Sets the objective function.
-     * 
-     * @param function The objective function.
-     */
-    public void setObjetiveFunction(ObjetiveFunction function) {
-        this.function = function;
+    public Linear getObjetiveFunction() {
+        return objetiveFunction;
     }
     
     /**
@@ -47,7 +39,7 @@ public class Problem {
      * @param linear The left-hand-side linear expression of the function.
      */
     public void setObjetiveFunction(Linear linear) {
-        this.function = new ObjetiveFunction(linear);
+        this.objetiveFunction = linear;
     }
 
     /**
