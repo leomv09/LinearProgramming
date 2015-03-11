@@ -1,5 +1,7 @@
 package cr.tec.lpsolver;
 
+import java.util.Map;
+
 /**
  * The class {@code Constraint} represent a linear constraint.
  * 
@@ -58,6 +60,32 @@ public class Constraint {
      */
     public int size() {
         return linear.size();
+    }
+    
+    /**
+     * Check if the given values satisfies the constraint.
+     * 
+     * @param values A map that represent the values of the variables in the constraint.
+     * 
+     * @return True if the values satisfies the equation, false instead.
+     * 
+     * @throws IllegalArgumentException If less or more values than the constraint variables are supplied 
+     * or a variable value is missing.
+     */
+    public boolean satisfies(Map<String, Double> values) throws IllegalArgumentException {
+        Double evaluation = linear.evaluate(values);
+        int comparation = Double.compare(evaluation, constant);
+        
+        switch (this.relationship) {
+            case EQ:
+                return comparation == 0;
+            case LEQ:
+                return comparation < 0;
+            case GEQ:
+                return comparation > 0;
+            default:
+                return false;
+        }
     }
 
 }
