@@ -1,11 +1,20 @@
 package cr.tec.lpsolver;
 
 /**
- *
- * @author jose
+ * A generic {@link Problem} {@code Solver}.
+ * 
+ * @author Leo
  */
-public abstract class Solver {
+public interface Solver {
     
-    public abstract Result solve(Object context, ProblemType type);
+    /**
+     * Solve a optimization problem.
+     *
+     * @param problem The optimization problem.
+     * 
+     * @return The result of the problem or {@code null} if there exists no
+     * feasible solution.
+     */
+    public abstract Result solve(Problem problem);
     
 }

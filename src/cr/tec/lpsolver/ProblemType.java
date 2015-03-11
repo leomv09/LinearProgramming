@@ -1,8 +1,9 @@
 package cr.tec.lpsolver;
 
 /**
- *
- * @author jose
+ * The optimization type.
+ * 
+ * @author Leo
  */
 public enum ProblemType {
     MIN,

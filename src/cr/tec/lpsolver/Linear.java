@@ -1,54 +1,156 @@
 package cr.tec.lpsolver;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 /**
- * Linear equation in the form a1x1 + a2x2 + a3x3 + ... + anxn = c
+ * The class {@code Linear} is a linear expression consisting of variables and
+ * their coefficients.
  * 
  * @author jose
  */
-public class Linear {
+public class Linear implements Iterable<Term> {
+    
+    protected final List<Term> terms;
     
     /**
-    * The value of the coefficients assigned to each variable of the equation, in order (x1, x2, x3, ...).
-    * Examples:
-    * 5x + y - 9z = {5, 1, -9}
-    * 2y - 1/4z   = {0, 2, 0.25}
-    * 7x          = {7}
-    */
-    protected double[] coefficients;
-    
-    /**
-     * The constant value of the equation.
+     * Constructs an empty linear expression.
      */
-    protected double constant;
-
-    public Linear(double[] coefficients, double constant) {
-        this.coefficients = coefficients;
-        this.constant = constant;
+    public Linear() {
+        super();
+        this.terms = new ArrayList<>();
     }
     
-    public Linear(double[] coefficients) {
-        this.coefficients = coefficients;
-        this.constant = 0;
+    /**
+     * Constructs a linear expression with the predefined variables and their
+     * coefficients.
+     * 
+     * @param coefficients The coefficients.
+     * @param variables The variables.
+     */
+    public Linear(List<Double> coefficients, List<String> variables) {
+        this();
+        if (coefficients.size() != variables.size()) {
+            throw new IllegalArgumentException("The size of the variables and coefficients must be equal.");
+        } else {
+            for (int i = 0; i < variables.size(); i++) {
+                String variable = variables.get(i);
+                Double coefficient = coefficients.get(i);
+                Term term = new Term(variable, coefficient);
+                this.add(term);
+            }
+        }
     }
     
-    public double[] getCoefficients() {
+    /**
+     * Constructs a linear expression from the terms.
+     * 
+     * @param terms The terms to be added
+     */
+    public Linear(Iterable<Term> terms) {
+        this();
+        for (Term term : terms) {
+            this.add(term);
+        }
+    }
+    
+    /**
+     * Returns the coefficients.
+     * 
+     * @return The coefficients.
+     */
+    public List<Double> getCoefficients() {
+        List<Double> coefficients = new ArrayList<>();
+        terms.stream().forEach((term) -> {
+            coefficients.add(term.getCoefficient());
+        });
         return coefficients;
     }
     
-    public double getCoefficient(int index) {
-        return coefficients[index];
+    /**
+     * Returns the coefficient assigned to a specific variable.
+     * 
+     * @param variable The variable.
+     * @return The coefficient.
+     */
+    public Double getCoefficient(String variable) {
+        for (Term t : this) {
+            if (t.getVariable().equals(variable)) {
+                return t.getCoefficient();
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the variables.
+     * 
+     * @return The variables.
+     */
+    public List<String> getVariables() {
+        List<String> variables = new ArrayList<>();
+        terms.stream().forEach((term) -> {
+            variables.add(term.getVariable());
+        });
+        return variables;
+    }
+    
+    /**
+     * Adds an element to the linear expression.
+     * 
+     * @param variable The variable.
+     * @param coefficient The coefficient.
+     */
+    public void add(Double coefficient, String variable) {
+        Term term = new Term(variable, coefficient);
+        this.add(term);
+    }
+    
+    /**
+     * Adds terms to the linear expression.
+     * 
+     * @param terms The terms to be added.
+     */
+    public void add(Term... terms) {
+        this.terms.addAll(Arrays.asList(terms));
+    }
+    
+    /**
+     * Returns the size (number of variables) of the linear expression.
+     * 
+     * @return The size.
+     */
+    public int size() {
+        return terms.size();
+    }
+    
+    /**
+     * Removes all terms.
+     */
+    public void clear() {
+        terms.clear();
     }
 
-    public void setCoefficients(double[] coefficients) {
-        this.coefficients = coefficients;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<Term> iterator() {
+        return terms.iterator();
     }
-
-    public double getConstant() {
-        return constant;
-    }
-
-    public void setConstant(double constant) {
-        this.constant = constant;
+    
+    /**
+     * Returns the {@code i}-th {@code Term}.
+     * 
+     * @param i The index.
+     * @return The i-th term.
+     */
+    public Term get(int i) {
+        return terms.get(i);
     }
     
 }
