@@ -340,5 +340,9 @@ public class TransportProblem {
     private int getConsumersIndex(String consumer) {
         return Arrays.binarySearch(this.consumers, consumer);
     }
+    
+    public Problem toProblem() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }
