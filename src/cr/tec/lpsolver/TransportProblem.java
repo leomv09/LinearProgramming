@@ -73,11 +73,11 @@ public class TransportProblem {
         producers[producers.length - 1] = producer;
         
         // Set production to -1.
-        production[producers.length - 1] = -1.0;
+        production[producers.length - 1] = -1;
         
         // Set the cost to all consumers to -1.
         for (int j = 0; j< consumers.length; j++) {
-            costTable[producers.length - 1][j] = -1.0;
+            costTable[producers.length - 1][j] = -1;
         }
     }
     
@@ -112,7 +112,7 @@ public class TransportProblem {
             System.arraycopy(costTable[i], 0, newRow, 0, consumers.length);
             
             // Set cost from current producer to -1.
-            newRow[consumers.length] = -1.0;
+            newRow[consumers.length] = -1;
             
             // Override row.
             costTable[i] = newRow;
@@ -126,7 +126,7 @@ public class TransportProblem {
         consumers[consumers.length - 1] = consumer;
         
         // Set demand to -1.
-        demand[consumers.length - 1] = -1.0;
+        demand[consumers.length - 1] = -1;
     }
     
     /**

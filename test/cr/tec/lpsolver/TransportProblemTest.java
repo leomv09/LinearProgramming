@@ -4,6 +4,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 /**
  *
@@ -23,12 +24,10 @@ public class TransportProblemTest {
      */
     @Test
     public void testAddProducer() {
-        System.out.println("addProducer");
-        
         problem.addProducer("Producer1");
         problem.addProducer("Producer2");
         
-        assertEquals(problem.getProducersCount(), 2);
+        assertThat(problem.getProducersCount(), is(2));
     }
 
     /**
@@ -36,13 +35,11 @@ public class TransportProblemTest {
      */
     @Test
     public void testAddConsumer() {
-        System.out.println("addConsumer");
-        
         problem.addConsumer("Consumer1");
         problem.addConsumer("Consumer2");
         problem.addConsumer("Consumer3");
         
-        assertEquals(problem.getConsumersCount(), 3);
+        assertThat(problem.getConsumersCount(), is(3));
     }
 
     /**
@@ -50,16 +47,14 @@ public class TransportProblemTest {
      */
     @Test
     public void testSetProduction() {
-        System.out.println("setProduction");
-        
         problem.addProducer("Producer1");
         problem.addProducer("Producer2");
         
         problem.setProduction("Producer1", 290);
         problem.setProduction("Producer2", 134);
         
-        assertEquals(problem.getProduction("Producer1"), 290, 0);
-        assertEquals(problem.getProduction("Producer2"), 134, 0);
+        assertThat(problem.getProduction("Producer1"), is(290.0));
+        assertThat(problem.getProduction("Producer2"), is(134.0));
     }
     
     /**
@@ -67,16 +62,14 @@ public class TransportProblemTest {
      */
     @Test
     public void testSetDemand() {
-        System.out.println("setDemand");
-
         problem.addConsumer("Consumer1");
         problem.addConsumer("Consumer2");
         
         problem.setDemand("Consumer1", 290);
         problem.setDemand("Consumer2", 134);
         
-        assertEquals(problem.getDemand("Consumer1"), 290, 0);
-        assertEquals(problem.getDemand("Consumer2"), 134, 0);
+        assertThat(problem.getDemand("Consumer1"), is(290.0));
+        assertThat(problem.getDemand("Consumer2"), is(134.0));
     }
 
     /**
@@ -84,13 +77,11 @@ public class TransportProblemTest {
      */
     @Test
     public void testSetCost() {
-        System.out.println("setCost");
-
         problem.addProducer("Producer1");
         problem.addConsumer("Consumer1");
         problem.setCost("Producer1", "Consumer1", 76);
         
-        assertEquals(problem.getCost("Producer1", "Consumer1"), 76, 0);
+        assertThat(problem.getCost("Producer1", "Consumer1"), is(76.0));
     }
 
     /**
@@ -98,15 +89,13 @@ public class TransportProblemTest {
      */
     @Test
     public void testGetTotalProduction() {
-        System.out.println("getTotalProduction");
-
         problem.addProducer("Producer1");
         problem.addProducer("Producer2");
         
         problem.setProduction("Producer1", 290);
         problem.setProduction("Producer2", 134);
-        
-        assertEquals(problem.getTotalProduction(), 424, 0);
+
+        assertThat(problem.getTotalProduction(), is(424.0));
     }
 
     /**
@@ -114,8 +103,6 @@ public class TransportProblemTest {
      */
     @Test
     public void testGetEachProduction() {
-        System.out.println("getEachProduction");
-        
         problem.addProducer("Producer1");
         problem.addProducer("Producer2");
         
@@ -123,9 +110,11 @@ public class TransportProblemTest {
         problem.setProduction("Producer2", 134);
         
         Map<String, Double> result = problem.getEachProduction();
-        assertEquals(result.size(), 2);
-        assertEquals(result.get("Producer1"), 290, 0);
-        assertEquals(result.get("Producer2"), 134, 0);
+        
+        assertThat(result, allOf(
+            hasEntry("Producer1", 290.0),
+            hasEntry("Producer2", 134.0))
+        );
     }
 
     /**
@@ -133,15 +122,13 @@ public class TransportProblemTest {
      */
     @Test
     public void testGetTotalDemand() {
-        System.out.println("getTotalDemand");
-        
         problem.addConsumer("Consumer1");
         problem.addConsumer("Consumer2");
         
         problem.setDemand("Consumer1", 290);
         problem.setDemand("Consumer2", 134);
         
-        assertEquals(problem.getTotalDemand(), 424, 0);
+        assertThat(problem.getTotalDemand(), is(424.0));
     }
 
     /**
@@ -149,8 +136,6 @@ public class TransportProblemTest {
      */
     @Test
     public void testGetEachDemand() {
-        System.out.println("getEachDemand");
-        
         problem.addConsumer("Consumer1");
         problem.addConsumer("Consumer2");
         
@@ -158,9 +143,11 @@ public class TransportProblemTest {
         problem.setDemand("Consumer2", 134);
         
         Map<String, Double> result = problem.getEachDemand();
-        assertEquals(result.size(), 2);
-        assertEquals(result.get("Consumer1"), 290, 0);
-        assertEquals(result.get("Consumer2"), 134, 0);
+        
+        assertThat(result, allOf(
+            hasEntry("Consumer1", 290.0),
+            hasEntry("Consumer2", 134.0))
+        );
     }
 
 }
