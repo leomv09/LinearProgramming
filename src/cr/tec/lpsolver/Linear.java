@@ -53,15 +53,16 @@ public class Linear implements Iterable<Term> {
      * Returns the coefficient assigned to a specific variable.
      * 
      * @param variable The variable.
-     * @return The coefficient.
+     * 
+     * @return The coefficient Double.NaN is returned if the variable don't exist in the linear expression.
      */
-    public Double getCoefficient(String variable) {
+    public double getCoefficient(String variable) {
         for (Term term : this.terms) {
             if (term.getVariable().equals(variable)) {
                 return term.getCoefficient();
             }
         }
-        return null;
+        return Double.NaN;
     }
     
     /**
@@ -70,7 +71,7 @@ public class Linear implements Iterable<Term> {
      * @param variable The variable.
      * @param coefficient The coefficient.
      */
-    public void add(Double coefficient, String variable) {
+    public void add(double coefficient, String variable) {
         Term term = new Term(variable, coefficient);
         this.add(term);
     }
@@ -82,6 +83,21 @@ public class Linear implements Iterable<Term> {
      */
     public void add(Term... terms) {
         this.terms.addAll(Arrays.asList(terms));
+    }
+    
+    /**
+     * Check if the linear expression contains the given variable.
+     * 
+     * @param variable The variable.
+     * @return True if the linear expression contains the variable.
+     */
+    public boolean containsVariable(String variable) {
+        for (Term term : this.terms) {
+            if (term.getVariable().equals(variable)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**

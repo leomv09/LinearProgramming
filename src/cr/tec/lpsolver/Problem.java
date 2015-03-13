@@ -1,6 +1,8 @@
 package cr.tec.lpsolver;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,6 +14,7 @@ import java.util.List;
 public class Problem {
 
     private final List<Constraint> constraints;
+    private final List<String> variables;
     private Linear objetiveFunction;
     private ProblemType type;
 
@@ -20,6 +23,7 @@ public class Problem {
      */
     public Problem() {
         this.constraints = new ArrayList<>();
+        this.variables = new ArrayList<>();
         this.objetiveFunction = new Linear();
         this.type = ProblemType.MAX;
     }
@@ -68,6 +72,24 @@ public class Problem {
     public ProblemType getProblemType() {
         return type;
     }
+    
+    /**
+     * Returns the variables.
+     * 
+     * @return the variables.
+     */
+   public List<String> getVariables() {
+        return variables;
+   }
+
+    /**
+     * Returns the number of variables.
+     * 
+     * @return the number of variables.
+     */
+    public int getVariablesCount() {
+        return variables.size();
+    }
 
     /**
      * Sets the optimization type (MIN - MAX).
@@ -85,6 +107,10 @@ public class Problem {
      */
     public void addConstraint(Constraint constraint) {
         constraints.add(constraint);
+        for (Term term : constraint.getLinear()) {
+            variables.add(term.getVariable());
+        }
+        Collections.sort(variables);
     }
 
     /**

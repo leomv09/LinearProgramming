@@ -18,7 +18,10 @@ public class Term {
      * @param coefficient The coefficient.
      *            
      */
-    public Term(String variable, double coefficient) {
+    public Term(String variable, double coefficient) throws IllegalArgumentException {
+        if (coefficient == 0) {
+            throw new IllegalArgumentException("Cannot create a term with coefficient cero.");
+        }
         this.variable = variable;
         this.coefficient = coefficient;
     }

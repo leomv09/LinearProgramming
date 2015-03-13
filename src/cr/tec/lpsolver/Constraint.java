@@ -11,7 +11,7 @@ public class Constraint {
     
     private final Linear linear;
     private final Relationship relationship;
-    private final Double constant;
+    private final double constant;
 
     /**
      * Constructs a {@code Constraint}.
@@ -20,7 +20,7 @@ public class Constraint {
      * @param relationship The relationship.
      * @param constant The right hand side.
      */
-    public Constraint(Linear linear, Relationship relationship, Double constant) {
+    public Constraint(Linear linear, Relationship relationship, double constant) {
         this.linear = linear;
         this.relationship = relationship;
         this.constant = constant;
