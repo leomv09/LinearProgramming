@@ -67,4 +67,40 @@ public class FeasibleRegion_Intersection_Test {
         assertThat("Have 3 lines", lines.size(), is(3));
     }
     
+    @Test
+    public void testIntersection_LQEDECXY_GQEINCY() {
+        FeasibleRegion r1 = regions.LQE_INC_XY;
+        FeasibleRegion r2 = regions.GQE_INC_Y;
+        
+        FeasibleRegion intersection = r1.intersection(r2);
+        Collection<Point2D> vertex = intersection.getVertex();
+        Collection<AbstractLine2D> lines = intersection.getLines();
+        
+        assertThat("Intersection should be unbounded", intersection.isBounded(), is(false));
+        assertThat("Intersection should be empty", intersection.isEmpty(), is(true));
+        assertThat("Have no vertex", vertex.size(), is(0));
+        assertThat("Have no lines", lines.size(), is(0));
+    }
+    
+    @Test
+    public void testIntersection_GQEDECXY_GQEINCY() {
+        FeasibleRegion r1 = regions.GQE_INC_XY;
+        FeasibleRegion r2 = regions.GQE_INC_Y;
+        
+        FeasibleRegion intersection = r1.intersection(r2);
+        Collection<Point2D> vertex = intersection.getVertex();
+        Collection<AbstractLine2D> lines = intersection.getLines();
+        System.out.println(intersection);
+        
+        assertThat("Intersection should be unbounded", intersection.isBounded(), is(false));
+        assertThat("Intersection should not be empty", intersection.isEmpty(), is(false));
+        
+        assertThat("Have vertex (0, 3)", vertex, containsPoint(0, 3));
+        assertThat("Have 1 vertex", vertex.size(), is(1));
+        
+        assertThat("Have ray (0, 3) - 90°", lines, containsRay(0, 3, 90));
+        assertThat("Have ray (0, 3) - 63.434948822922°", lines, containsRay(0, 3, 63.434948822922));
+        assertThat("Have 2 lines", lines.size(), is(2));
+    }
+    
 }

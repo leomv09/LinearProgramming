@@ -324,7 +324,7 @@ public class FeasibleRegion {
      * @return True if the is empty.
      */
     public boolean isEmpty() {
-        return this.vertex.isEmpty();
+        return this.vertex.isEmpty() && this.lines.isEmpty();
     }
     
     /**
@@ -333,7 +333,7 @@ public class FeasibleRegion {
      * @return True if the is bounded.
      */
     public boolean isBounded() {
-        return lines.stream().noneMatch((line) -> (line instanceof Ray2D));
+        return !this.isEmpty() && lines.stream().noneMatch((line) -> (line instanceof Ray2D));
     }
     
     /**
