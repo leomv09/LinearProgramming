@@ -44,4 +44,9 @@ public class Term {
         return coefficient;
     }
 
+    @Override
+    public String toString() {
+        return coefficient + variable;
+    }
+    
 }

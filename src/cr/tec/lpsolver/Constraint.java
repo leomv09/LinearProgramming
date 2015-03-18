@@ -88,4 +88,9 @@ public class Constraint {
         }
     }
 
+    @Override
+    public String toString() {
+        return linear + " " + relationship + " " + constant;
+    }
+    
 }

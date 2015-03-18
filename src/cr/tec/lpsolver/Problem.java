@@ -1,7 +1,6 @@
 package cr.tec.lpsolver;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -123,6 +122,17 @@ public class Problem {
     public void addConstraint(Linear linear, Relationship relationship, Double constant) {
         Constraint constraint = new Constraint(linear, relationship, constant);
         this.addConstraint(constraint);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(type.name()).append(" ").append(objetiveFunction).append("\n");
+        sb.append("Suj:\n");
+        for (Constraint constraint : constraints) {
+            sb.append("    ").append(constraint).append("\n");
+        }
+        return sb.toString();
     }
 
 }

@@ -152,5 +152,16 @@ public class Linear implements Iterable<Term> {
         }
         return result;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < terms.size(); i++) {
+            sb.append(terms.get(i));
+            if (i + 1 < terms.size()) {
+                sb.append(" + ");
+            }
+        }
+        return sb.toString();
+    }
 }
