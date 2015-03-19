@@ -137,9 +137,6 @@ public class Linear implements Iterable<Term> {
      * or a variable value is missing.
      */
     public double evaluate(Map<String, Double> values) throws IllegalArgumentException {
-        if (values.size() != terms.size()) {
-            throw new IllegalArgumentException("Invalid number of values. Get " + values.size() + " Expect " + terms.size());
-        }
         double result = 0;
         for (Term term : terms) {
             String variable = term.getVariable();

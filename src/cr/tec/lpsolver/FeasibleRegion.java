@@ -61,6 +61,7 @@ public class FeasibleRegion {
      */
     public FeasibleRegion(List<String> variables, Constraint constraint) throws IllegalArgumentException  {
         this();
+        this.variables = variables;
         this.constraints.add(constraint);
         
         if (variables.size() != 2) {
@@ -218,7 +219,6 @@ public class FeasibleRegion {
      * @return The intersection with the given feasible region.
      */
     public FeasibleRegion intersection(FeasibleRegion region) {
-        
         Set<AbstractLine2D> newLines = new HashSet<>();
 
         Set<Point2D> newVertex = new HashSet<>();
@@ -242,7 +242,6 @@ public class FeasibleRegion {
             
             List<Point2D> intersections;
             Point2D start, end;
-            AbstractLine2D l;
             
             for (AbstractLine2D line : linesUnion) {
                 intersections = GeometryUtils.getIntersections(line, newVertex);
@@ -303,7 +302,7 @@ public class FeasibleRegion {
      * @param point The point.
      */
     private void addVertex(Point2D point) {
-        FeasibleRegion.this.addVertex(this.vertex, point);
+        addVertex(this.vertex, point);
     }
     
     /**
