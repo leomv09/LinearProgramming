@@ -20,7 +20,6 @@ import java.io.StringReader;
 public class PLReader {
 
     private final String[] variables;
-    private LineReader lineReader;
     
     /**
      * Construct a {@code PLReader}.
@@ -60,7 +59,7 @@ public class PLReader {
      * @throws IOException If an I/O error occurs.
      */
     public Problem read(Reader reader) throws IOException {
-        this.lineReader = new LineReader(reader);
+        LineReader lineReader = new LineReader(reader);
         String[] buffer = lineReader.readLines();
         
         if (!hasValidLength(buffer)) {
@@ -68,15 +67,14 @@ public class PLReader {
         }
         
         Problem problem = new Problem();
+        
         ProblemType type = readProblemType(buffer);
         Linear function = readObjectiveFunction(buffer);
         Constraint[] constraints = readConstraints(buffer);
         
         problem.setProblemType(type);
         problem.setObjetiveFunction(function);
-        for (Constraint constraint : constraints) {
-            problem.addConstraint(constraint);
-        }
+        problem.addConstraints(constraints);
         
         return problem;
     }
