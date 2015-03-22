@@ -66,7 +66,7 @@ public class Linear implements Iterable<Term> {
     }
     
     /**
-     * Adds an term to the linear expression.
+     * Adds a term to the linear expression.
      * 
      * @param variable The variable.
      * @param coefficient The coefficient.

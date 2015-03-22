@@ -21,7 +21,7 @@ public class TransportProblem {
     private String[] producers;
     
     /**
-     * The production quantity for each producers.
+     * The production quantity for each producer.
      */
     private double[] production;
     
@@ -342,6 +342,42 @@ public class TransportProblem {
     }
     
     public Problem toProblem() {
+        
+        Constraint[][] shippingTable = new Constraint[producers.length][consumers.length];
+        
+        for(int i = 0; i <= producers.length; i++)
+        {
+            
+            for(int j = 0; j <= consumers.length; j++)
+            {
+                if(i == 0)
+                {  
+                    if(j == 0)
+                    {
+                        Linear linear = new Linear();
+                        linear.add(1, "x");
+                        Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
+                        shippingTable[i][j] = cons;
+                    }
+                    else if(j == 1)
+                    {
+                        Linear linear = new Linear();
+                        linear.add(1, "y");
+                        Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
+                        shippingTable[i][j] = cons;
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+                else
+                {
+                    
+                }
+            }
+        }
+        
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
