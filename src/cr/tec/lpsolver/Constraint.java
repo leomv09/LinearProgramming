@@ -81,8 +81,6 @@ public class Constraint {
                 return comparation <= 0;
             case GEQ:
                 return comparation >= 0;
-                        case EQ:
-                return comparation == 0;
             default:
                 return false;
         }

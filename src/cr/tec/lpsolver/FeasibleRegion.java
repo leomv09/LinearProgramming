@@ -61,14 +61,16 @@ public class FeasibleRegion {
      */
     public FeasibleRegion(List<String> variables, Constraint constraint) throws IllegalArgumentException  {
         this();
-        this.variables = variables;
-        this.constraints.add(constraint);
         
         if (variables.size() != 2) {
             throw new IllegalArgumentException("The plot must have 2 dimensions.");
         }
         
+        this.variables = variables;
+        this.constraints.add(constraint);
+        
         Linear linear = constraint.getLinear();
+        Relationship relation = constraint.getRelationship();
 
         // Get the name of the equation variables.
         String xVariable = variables.get(0);
@@ -84,96 +86,93 @@ public class FeasibleRegion {
         double intersectionY = c/y;
         
         // Flags
-        boolean intersectsX = false;
-        boolean intersectsY = false;
+        boolean intersectsX = intersectionX >= 0;
+        boolean intersectsY = intersectionY >= 0;
         
-        // Add the intersection with the X axis to the set of points.
-        if (linear.containsVariable(xVariable)) {
-            Point2D xPoint = new Point2D(intersectionX, 0);
-            if (GeometryUtils.isPositivePoint(xPoint)) {
-                addVertex(xPoint);
-                intersectsX = true;
-            }
-        }
-        
-        // Add the intersection with the Y axis to the set of points.
-        if (linear.containsVariable(yVariable)) {
-            Point2D yPoint = new Point2D(0, intersectionY);
-            if (GeometryUtils.isPositivePoint(yPoint)) {
-                addVertex(yPoint);
-                intersectsY = true;
-            }
-        }
-        
-        if (constraint.getRelationship() == Relationship.LEQ) {
-            // The line has a slope.
-            if (linear.containsVariable(xVariable) && linear.containsVariable(yVariable)) {
-                // The line has increasing slope.
-                if (x/y < 0) {
-                    if (intersectsX) {
-                        addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, 0));
-                        addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, (c-x*(intersectionX+1))/y));
-                    }
-                    else if (intersectsY) {
-                        addLine(GeometryUtils.createRay(0, intersectionY, 1, (c-x)/y));
-                        addLine(GeometryUtils.createRay(0, 0, 1, 0));
-                        addLine(GeometryUtils.createSegment(0, 0, 0, intersectionY));
-                    }
-                }
-                // The line has decreasing slope.
+        if (intersectsX && intersectsY) {
+            if (x*y < 0) { /* Increasing. */
+                addVertex(GeometryUtils.createPoint(0, 0));
+                addLine(GeometryUtils.createRay(0, 0, 1, 1));
+                if (relation == Relationship.LEQ) {
+                    addLine(GeometryUtils.createRay(0, 0, 1, 0));
+                } 
                 else {
+                    addLine(GeometryUtils.createRay(0, 0, 0, 1));
+                }
+            }
+            else { /* Decreasing. */
+                addVertex(GeometryUtils.createPoint(intersectionX, 0));
+                addVertex(GeometryUtils.createPoint(0, intersectionY));
+                addLine(GeometryUtils.createSegment(0, intersectionY, intersectionX, 0));
+                if (relation == Relationship.LEQ) {
                     addVertex(GeometryUtils.createPoint(0, 0));
                     addLine(GeometryUtils.createSegment(0, 0, 0, intersectionY));
                     addLine(GeometryUtils.createSegment(0, 0, intersectionX, 0));
-                    addLine(GeometryUtils.createSegment(0, intersectionY, intersectionX, 0));
+                }
+                else {
+                    addLine(GeometryUtils.createRay(0, intersectionY, 0, intersectionY+1));
+                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, 0));
+                } 
+            }
+        }
+        else if (intersectsX) {
+            addVertex(GeometryUtils.createPoint(intersectionX, 0));
+            if (x*y < 0) { /* Increasing. */
+                if (relation == Relationship.LEQ) {
+                    addLine(GeometryUtils.createRay(0, 0, 0, 1));
+                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, (c-x*(intersectionX+1))/y));
+                    addLine(GeometryUtils.createSegment(0, 0, intersectionX, 0));
+                }
+                else {
+                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, 0));
+                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, (c-x*(intersectionX+1))/y));
                 }
             }
-            // The line is constant.
-            else {
-                if (intersectsX) {
+            else { /* Constant. */
+                if (relation == Relationship.LEQ) {
+                    addVertex(GeometryUtils.createPoint(0, 0));
                     addLine(GeometryUtils.createRay(0, 0, 0, 1));
                     addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX, 1));
                     addLine(GeometryUtils.createSegment(0, 0, intersectionX, 0));
                 }
-                else if (intersectsY) {
+                else {
+                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX, 1));
+                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, 0));
+                }
+            }
+        }
+        else if (intersectsY) {
+            addVertex(GeometryUtils.createPoint(0, intersectionY));
+            if (x*y < 0) { /* Increasing. */
+                if (relation == Relationship.LEQ) {
+                    addLine(GeometryUtils.createRay(0, intersectionY, 1, (c-x)/y));
+                    addLine(GeometryUtils.createRay(0, 0, 1, 0));
+                    addLine(GeometryUtils.createSegment(0, 0, 0, intersectionY));
+                }
+                else {
+                    addLine(GeometryUtils.createRay(0, intersectionY, 0, intersectionY+1));
+                    addLine(GeometryUtils.createRay(0, intersectionY, 1, (c-x)/y));
+                }
+            }
+            else { /* Constant. */
+                if (relation == Relationship.LEQ) {
+                    addVertex(GeometryUtils.createPoint(0, 0));
                     addLine(GeometryUtils.createRay(0, 0, 1, 0));
                     addLine(GeometryUtils.createRay(0, intersectionY, 1, intersectionY));
                     addLine(GeometryUtils.createSegment(0, 0, 0, intersectionY));
                 }
-            }
-        }
-        else if (constraint.getRelationship() == Relationship.GEQ) {
-            // The line has a slope.
-            if (linear.containsVariable(xVariable) && linear.containsVariable(yVariable)) {
-                // The line has increasing slope.
-                if (x/y < 0) {
-                    if (intersectsX) {
-                        addLine(GeometryUtils.createRay(0, 0, 0, 1));
-                        addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, (c-x*(intersectionX+1))/y));
-                        addLine(GeometryUtils.createSegment(0, 0, intersectionX, 0));
-                    }
-                    else if (intersectsY) {
-                        addLine(GeometryUtils.createRay(0, intersectionY, 0, intersectionY+1));
-                        addLine(GeometryUtils.createRay(0, intersectionY, 1, (c-x)/y));
-                    }
-                }
-                // The line has decreasing slope.
                 else {
-                    addLine(GeometryUtils.createRay(0, intersectionY, 0, intersectionY+1));
-                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, 0));
-                    addLine(GeometryUtils.createSegment(0, intersectionY, intersectionX, 0));
-                }
-            }
-            // The line is constant.
-            else {
-                if (intersectsX) {
-                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX, 1));
-                    addLine(GeometryUtils.createRay(intersectionX, 0, intersectionX+1, 0));
-                }
-                else if (intersectsY) {
                     addLine(GeometryUtils.createRay(0, intersectionY, 0, intersectionY+1));
                     addLine(GeometryUtils.createRay(0, intersectionY, 1, intersectionY));
                 }
+            }
+        }
+        else { 
+            // Full positive quadrant.
+            if (constraint.getRelationship() == Relationship.GEQ) {
+                addVertex(GeometryUtils.createPoint(0, 0));
+                addLine(GeometryUtils.createRay(0, 0, 0, 1));
+                addLine(GeometryUtils.createRay(0, 0, 1, 0));
             }
         }
     }

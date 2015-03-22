@@ -90,7 +90,6 @@ public class FeasibleRegion_Intersection_Test {
         FeasibleRegion intersection = r1.intersection(r2);
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
-        System.out.println(intersection);
         
         assertThat("Intersection should be unbounded", intersection.isBounded(), is(false));
         assertThat("Intersection should not be empty", intersection.isEmpty(), is(false));
