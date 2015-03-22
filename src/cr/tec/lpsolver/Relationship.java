@@ -8,5 +8,19 @@ package cr.tec.lpsolver;
 public enum Relationship {
     EQ,
     LEQ,
-    GEQ
+    GEQ;
+    
+    @Override
+    public String toString() {
+        switch (this) {
+            case EQ:
+                return "=";
+            case LEQ:
+                return "<=";
+            case GEQ:
+                return ">=";
+        }
+        return "";
+    }
+
 }

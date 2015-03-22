@@ -77,15 +77,20 @@ public class Constraint {
         int comparation = Double.compare(evaluation, constant);
         
         switch (this.relationship) {
-            case EQ:
-                return comparation == 0;
             case LEQ:
-                return comparation < 0;
+                return comparation <= 0;
             case GEQ:
-                return comparation > 0;
+                return comparation >= 0;
+                        case EQ:
+                return comparation == 0;
             default:
                 return false;
         }
     }
 
+    @Override
+    public String toString() {
+        return linear + " " + relationship + " " + constant;
+    }
+    
 }

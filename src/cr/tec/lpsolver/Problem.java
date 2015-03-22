@@ -121,7 +121,29 @@ public class Problem {
      */
     public void addConstraint(Linear linear, Relationship relationship, Double constant) {
         Constraint constraint = new Constraint(linear, relationship, constant);
-        this.addConstraint(constraint);
+        addConstraint(constraint);
+    }
+    
+    /**
+     * Add an array of constraints.
+     * 
+     * @param constraints The constraints.
+     */
+    public void addConstraints(Constraint... constraints) {
+        for (Constraint constraint : constraints) {
+            addConstraint(constraint);
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(type.name()).append(" ").append(objetiveFunction).append("\n");
+        sb.append("Suj:\n");
+        for (Constraint constraint : constraints) {
+            sb.append("    ").append(constraint).append("\n");
+        }
+        return sb.toString();
     }
 
 }
