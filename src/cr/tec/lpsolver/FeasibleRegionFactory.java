@@ -40,7 +40,7 @@ public class FeasibleRegionFactory {
      * 
      * @param variables The variables.
      */
-    public FeasibleRegionFactory(String[] variables) {
+    public FeasibleRegionFactory(String... variables) {
         this.variables = Arrays.asList(variables);
     }
 
@@ -53,6 +53,10 @@ public class FeasibleRegionFactory {
      */
     public FeasibleRegion createFeasibleRegion(Constraint constraint) {
         return new FeasibleRegion(variables, constraint);
+    }
+    
+    public FeasibleRegion createEmptyRegion() {
+        return new FeasibleRegion(variables);
     }
     
 }

@@ -20,14 +20,6 @@ public class SimplexSolverTest {
      */
     @Test
     public void testMax() {
-        System.out.println("Solve a Maximization Simplex Problem");
-        System.out.println("Max. 7x1 + 8x2 + 10x3");
-        System.out.println("s.a.");
-        System.out.println("2x1 + 3x2 + 2x3 <= 1000");
-        System.out.println("x1 + x2 + 2x3 <= 800");
-        System.out.println("x1 + x2 + x3 <= 100");
-        System.out.println("x1, x2, x3 >= 0");
-        
         Problem problem = new Problem();
         Linear linear;
         
@@ -56,6 +48,7 @@ public class SimplexSolverTest {
         linear.add(1.0, "x3");
         problem.addConstraint(linear, Relationship.LEQ, 100.0);
 
+        System.out.println(problem);
         Result result = solver.solve(problem);
     }
     

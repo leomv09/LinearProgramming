@@ -18,17 +18,6 @@ import math.geom2d.line.Ray2D;
 public class GeometryUtils {
     
     /**
-     * Checks if a point is located on the positive side of the plane.
-     * 
-     * @param point The point.
-     * 
-     * @return True if a point is located on the positive side of the plane.
-     */
-    public static boolean isPositivePoint(Point2D point) {
-        return (Double.compare(point.getX(), 0) >= 0) && (Double.compare(point.getY(), 0) >= 0);
-    }
-    
-    /**
      * Creates a new point.
      * 
      * @param x The x coordinate.

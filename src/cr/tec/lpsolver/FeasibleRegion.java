@@ -41,14 +41,19 @@ public class FeasibleRegion {
     
     /**
      * Construct a empty {@code FeasibleRegion} object.
+     * 
+     * @param variables An array that contains the name of the variables in the problem.
+     * 
+     * @throws IllegalArgumentException If more than 2 variables are supplied.
      */
-    private FeasibleRegion() {
+    public FeasibleRegion(List<String> variables) throws IllegalArgumentException {
+        if (variables.size() != 2) {
+            throw new IllegalArgumentException("The plot must have 2 dimensions.");
+        }
         this.lines = new HashSet<>();
         this.vertex = new HashSet<>();
         this.constraints = new ArrayList<>();
-        this.variables = new ArrayList<>();
-        this.variables.add("x");
-        this.variables.add("y");
+        this.variables = variables;
     }
 
     /**
@@ -56,17 +61,9 @@ public class FeasibleRegion {
      * 
      * @param variables An array that contains the name of the variables in the problem.
      * @param constraint The constraint.
-     * 
-     * @throws IllegalArgumentException If more than 2 variables are supplied.
      */
-    public FeasibleRegion(List<String> variables, Constraint constraint) throws IllegalArgumentException  {
-        this();
-        
-        if (variables.size() != 2) {
-            throw new IllegalArgumentException("The plot must have 2 dimensions.");
-        }
-        
-        this.variables = variables;
+    public FeasibleRegion(List<String> variables, Constraint constraint) {
+        this(variables);
         this.constraints.add(constraint);
         
         Linear linear = constraint.getLinear();
@@ -167,7 +164,7 @@ public class FeasibleRegion {
                 }
             }
         }
-        else { 
+        else {
             // Full positive quadrant.
             if (constraint.getRelationship() == Relationship.GEQ) {
                 addVertex(GeometryUtils.createPoint(0, 0));
@@ -219,59 +216,82 @@ public class FeasibleRegion {
      */
     public FeasibleRegion intersection(FeasibleRegion region) {
         Set<AbstractLine2D> newLines = new HashSet<>();
-
         Set<Point2D> newVertex = new HashSet<>();
+        
         GeometryUtils.getIntersections(this.lines, region.lines).stream().forEach((point) -> {
             addVertex(newVertex, point);
         });
         
-        Collection<Point2D> vertexUnion = new HashSet<>();
-        vertexUnion.addAll(this.vertex);
-        vertexUnion.addAll(region.vertex);
+        Collection<Point2D> vertexUnion = Utils.merge(this.vertex, region.vertex);
         
-        vertexUnion.stream().filter((point) -> (this.contains(point) && region.contains(point))).forEach((point) -> {
+        vertexUnion.stream()
+                .filter((point) -> (this.contains(point) && region.contains(point)))
+                .forEach((point) -> {
             addVertex(newVertex, point);
         });
         
         if (!newVertex.isEmpty()) {
             
-            Collection<AbstractLine2D> linesUnion = new HashSet<>();
-            linesUnion.addAll(this.lines);
-            linesUnion.addAll(region.lines);
+            Collection<AbstractLine2D> linesUnion = Utils.merge(this.lines, region.lines);
             
             List<Point2D> intersections;
             Point2D start, end;
             
             for (AbstractLine2D line : linesUnion) {
                 intersections = GeometryUtils.getIntersections(line, newVertex);
-
                 if ( (intersections.size() == 1) && (line instanceof Ray2D) ) {
-                    
                     start = intersections.get(0);
                     addLine(newLines, new Ray2D(start, line.direction().angle()));
-
                 }
                 else if (intersections.size() == 2) {
-                    
                     start = intersections.get(0);
                     end = intersections.get(1);
                     addLine(newLines, new LineSegment2D(start, end));
-                    
                 }
-                
             }
-            
         }
         
-        FeasibleRegion r = new FeasibleRegion();
+        FeasibleRegion r = new FeasibleRegion(this.variables);
         
         r.lines = newLines;
         r.vertex = newVertex;
         r.constraints.addAll(this.constraints);
         r.constraints.addAll(region.constraints);
-        r.variables = this.variables;
         
         return r;
+    }
+    
+    public void clip(double x, double y) {
+        FeasibleRegion r = new FeasibleRegion(this.variables);
+        
+        Linear linear;
+        Constraint constraint;
+        
+        linear = new Linear();
+        linear.add(1, "x");
+        constraint = new Constraint(linear, Relationship.LEQ, x);
+        r.constraints.add(constraint);
+        
+        linear = new Linear();
+        linear.add(1, "y");
+        constraint = new Constraint(linear, Relationship.LEQ, y);
+        r.constraints.add(constraint);
+        
+        r.addVertex(GeometryUtils.createPoint(0, 0));
+        r.addVertex(GeometryUtils.createPoint(0, y));
+        r.addVertex(GeometryUtils.createPoint(x, 0));
+        r.addVertex(GeometryUtils.createPoint(x, y));
+        
+        r.addLine(GeometryUtils.createSegment(0, 0, 0, y));
+        r.addLine(GeometryUtils.createSegment(0, y, x, y));
+        r.addLine(GeometryUtils.createSegment(x, y, x, 0));
+        r.addLine(GeometryUtils.createSegment(x, 0, 0, 0));
+        
+        FeasibleRegion intersection = this.intersection(r);
+        
+        this.lines = intersection.lines;
+        this.vertex = intersection.vertex;
+        this.constraints = intersection.constraints;
     }
     
     /**
