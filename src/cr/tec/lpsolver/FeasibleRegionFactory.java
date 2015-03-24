@@ -55,6 +55,11 @@ public class FeasibleRegionFactory {
         return new FeasibleRegion(variables, constraint);
     }
     
+    /**
+     * Creates a empty {@code FeasibleRegion}.
+     * 
+     * @return The region.
+     */
     public FeasibleRegion createEmptyRegion() {
         return new FeasibleRegion(variables);
     }

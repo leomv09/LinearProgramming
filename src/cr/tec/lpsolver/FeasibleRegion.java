@@ -266,6 +266,12 @@ public class FeasibleRegion {
         return r;
     }
     
+    /**
+     * Clip the region to the box described as (0, x, 0, y).
+     * 
+     * @param x The width of the box.
+     * @param y The height of the box.
+     */
     public void clip(double x, double y) {
         FeasibleRegion r = new FeasibleRegion(this.variables);
         
@@ -298,6 +304,17 @@ public class FeasibleRegion {
         this.vertex = intersection.vertex;
         this.constraints = intersection.constraints;
         this.sortVertex();
+    }
+    
+    /**
+     * Clip the region.
+     */
+    public void clip() {
+        if (!this.isBounded()) {
+            Polygon2D polygon = new SimplePolygon2D(this.vertex);
+            Box2D box = polygon.boundingBox();
+            this.clip(box.getMaxX() * 1.5, box.getMaxY() * 1.5);
+        }
     }
     
     /**
@@ -388,6 +405,28 @@ public class FeasibleRegion {
      */
     public boolean isBounded() {
         return !this.isEmpty() && lines.stream().noneMatch((line) -> (line instanceof Ray2D));
+    }
+    
+    /**
+     * Get the vertex with the maximum X coordinate.
+     * 
+     * @return The vertex with the maximum X coordinate.
+     */
+    public double getMaxX() {
+        Polygon2D polygon = new SimplePolygon2D(this.vertex);
+        Box2D box = polygon.boundingBox();
+        return box.getMaxX();
+    }
+    
+    /**
+     * Get the vertex with the maximum Y coordinate.
+     * 
+     * @return The vertex with the maximum Y coordinate.
+     */
+    public double getMaxY() {
+        Polygon2D polygon = new SimplePolygon2D(this.vertex);
+        Box2D box = polygon.boundingBox();
+        return box.getMaxY();
     }
     
     /**
