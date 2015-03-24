@@ -1,8 +1,10 @@
 package cr.tec.lpsolver;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The class {@code Problem} represents a linear problem consisting of multiple
@@ -13,7 +15,7 @@ import java.util.List;
 public class Problem {
 
     private final List<Constraint> constraints;
-    private final List<String> variables;
+    private final Set<String> variables;
     private Linear objetiveFunction;
     private ProblemType type;
 
@@ -22,7 +24,7 @@ public class Problem {
      */
     public Problem() {
         this.constraints = new ArrayList<>();
-        this.variables = new ArrayList<>();
+        this.variables = new HashSet<>();
         this.objetiveFunction = new Linear();
         this.type = ProblemType.MAX;
     }
@@ -77,7 +79,7 @@ public class Problem {
      * 
      * @return the variables.
      */
-   public List<String> getVariables() {
+   public Collection<String> getVariables() {
         return variables;
    }
 
@@ -109,7 +111,6 @@ public class Problem {
         for (Term term : constraint.getLinear()) {
             variables.add(term.getVariable());
         }
-        Collections.sort(variables);
     }
 
     /**
