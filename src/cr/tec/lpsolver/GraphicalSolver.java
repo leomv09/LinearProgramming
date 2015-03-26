@@ -22,17 +22,18 @@ public class GraphicalSolver implements Solver {
     @Override
     public Result solve(Problem problem) {
         
+        FeasibleRegionFactory regionFactory = new FeasibleRegionFactory(problem);
         FeasibleRegion region = null;
         
         for(Constraint cons : problem.getConstraints())
         {
             if(region == null)
             {
-                region = new FeasibleRegion(problem.getVariables(), cons);
+                region = regionFactory.createFeasibleRegion(cons);
             }
             else
             {
-                FeasibleRegion region2 = new FeasibleRegion(problem.getVariables(), cons);
+                FeasibleRegion region2 = regionFactory.createFeasibleRegion(cons);
                 region = region.intersection(region2);
             }
         }
@@ -44,7 +45,10 @@ public class GraphicalSolver implements Solver {
             values.put("x", optimumPoint.getX());
             values.put("y", optimumPoint.getY());
         
-            return new Result(region, problem.getObjetiveFunction().evaluate(values), optimumPoint);
+            Result res = new Result(region, problem.getObjetiveFunction().evaluate(values));
+            res.addVariable("x",  optimumPoint.getX());
+            res.addVariable("y",  optimumPoint.getY());
+            return res;
         }
         else
         {

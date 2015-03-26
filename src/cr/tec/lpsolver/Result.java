@@ -1,6 +1,7 @@
 package cr.tec.lpsolver;
 
-import math.geom2d.Point2D;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@code Result} of a {@link Problem}.
@@ -11,20 +12,19 @@ public class Result {
     
     FeasibleRegion feasibleRegion;//Feasible region of the problem.
     double optimumValue;//Best result depending on its type(min or max).
-    Point2D optimumPoint;//Best point of the feasible region.
+    Map<String, Double> variablesResult;//A map with the variable and its corresponding result.
     
     
     /**
      * Creates a new instance of Result. 
      * @param region The feasible region of the problem.
      * @param OptimumValue The best result at the moment of evaluating the points.
-     * @param OptimumPoint The best point of the feasible region.
      */
-    public Result(FeasibleRegion region, double OptimumValue, Point2D OptimumPoint)
+    public Result(FeasibleRegion region, double OptimumValue)
     {
         this.feasibleRegion = region;
         this.optimumValue = OptimumValue;
-        this.optimumPoint = OptimumPoint;
+        this.variablesResult = new HashMap();
     }
     
     /**
@@ -46,11 +46,21 @@ public class Result {
     }
     
     /**
-     * Obtains the optimum point of the feasible region.
-     * @return the best Point2D (point) of the feasible region.
+     * Adds a new variable to the variables map
+     * @param variable the name of the variable.
+     * @param result the variable result value.
      */
-    public Point2D getOptimumPoint()
+    public void addVariable(String variable, Double result)
     {
-        return this.optimumPoint;
+        this.variablesResult.put(variable, result);
+    }
+    
+    /**
+     * Obtains the variables map.
+     * @return Map object corrsponding to the variables map.
+     */
+    public Map getResults()
+    {
+        return this.variablesResult;
     }
 }
