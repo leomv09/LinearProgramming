@@ -23,7 +23,7 @@ public class FeasibleRegionFactory {
      * @param problem The problem;
      */
     public FeasibleRegionFactory(Problem problem) {
-        this.variables = new ArrayList<>(problem.getVariables());
+        this.variables = problem.getVariables();
     }
     
     /**

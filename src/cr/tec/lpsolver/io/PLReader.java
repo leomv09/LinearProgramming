@@ -91,7 +91,7 @@ public class PLReader {
      * @return True if the buffer has valid length.
      */
     private boolean hasValidLength(String[] buffer) {
-        return buffer.length > 8 && (buffer.length - 3) % 5 == 0;
+        return buffer.length >= 8 && (buffer.length - 3) % 5 == 0;
     }
     
     /**

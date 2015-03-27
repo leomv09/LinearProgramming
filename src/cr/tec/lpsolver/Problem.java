@@ -1,7 +1,7 @@
 package cr.tec.lpsolver;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,8 +79,10 @@ public class Problem {
      * 
      * @return the variables.
      */
-   public Collection<String> getVariables() {
-        return variables;
+   public List<String> getVariables() {
+        List<String> l = new ArrayList<>(variables);
+        Collections.sort(l);
+        return l;
    }
 
     /**

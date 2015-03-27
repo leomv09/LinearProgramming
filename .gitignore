@@ -1,3 +1,7 @@
+#files
+*.pl
+*.transport
+
 #ant specific
 dist/
 build/

@@ -307,17 +307,6 @@ public class FeasibleRegion {
     }
     
     /**
-     * Clip the region.
-     */
-    public void clip() {
-        if (!this.isBounded()) {
-            Polygon2D polygon = new SimplePolygon2D(this.vertex);
-            Box2D box = polygon.boundingBox();
-            this.clip(box.getMaxX() * 1.5, box.getMaxY() * 1.5);
-        }
-    }
-    
-    /**
      * Add a line to a list if the line is not empty and the list doesn't already contains the line.
      * 
      * @param list The list.
