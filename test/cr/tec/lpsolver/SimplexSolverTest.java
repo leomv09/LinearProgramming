@@ -1,5 +1,7 @@
 package cr.tec.lpsolver;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -49,7 +51,11 @@ public class SimplexSolverTest {
         problem.addConstraint(linear, Relationship.LEQ, 100.0);
 
         System.out.println(problem);
-        Result result = solver.solve(problem);
+        try {
+            Result result = solver.solve(problem);
+        } catch (Exception ex) {
+            Logger.getLogger(SimplexSolverTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

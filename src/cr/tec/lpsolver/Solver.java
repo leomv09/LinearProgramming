@@ -14,7 +14,9 @@ public interface Solver {
      * 
      * @return The result of the problem or {@code null} if there exists no
      * feasible solution.
+     * 
+     * @throws java.lang.Exception If the problem have no solutions.
      */
-    public abstract Result solve(Problem problem);
+    public abstract Result solve(Problem problem) throws Exception;
     
 }
