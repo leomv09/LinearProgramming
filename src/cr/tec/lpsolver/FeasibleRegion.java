@@ -271,8 +271,10 @@ public class FeasibleRegion {
      * 
      * @param x The width of the box.
      * @param y The height of the box.
+     * 
+     * @return The clipped region.
      */
-    public void clip(double x, double y) {
+    public FeasibleRegion clip(double x, double y) {
         FeasibleRegion r = new FeasibleRegion(this.variables);
         
         Linear linear;
@@ -298,12 +300,7 @@ public class FeasibleRegion {
         r.addLine(GeometryUtils.createSegment(x, y, x, 0));
         r.addLine(GeometryUtils.createSegment(x, 0, 0, 0));
         
-        FeasibleRegion intersection = this.intersection(r);
-        
-        this.lines = intersection.lines;
-        this.vertex = intersection.vertex;
-        this.constraints = intersection.constraints;
-        this.sortVertex();
+        return intersection(r);
     }
     
     /**
