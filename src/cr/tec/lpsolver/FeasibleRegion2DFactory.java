@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Creates {@link FeasibleRegion} objects for a {@link Problem}.
+ * Creates {@link FeasibleRegion2D} objects for a {@link Problem}.
  * 
  * @author jose
  */
-public class FeasibleRegionFactory {
+public class FeasibleRegion2DFactory {
     
     /**
      * The name of the variables in the problem.
@@ -22,7 +22,7 @@ public class FeasibleRegionFactory {
      * 
      * @param problem The problem;
      */
-    public FeasibleRegionFactory(Problem problem) {
+    public FeasibleRegion2DFactory(Problem problem) {
         this.variables = problem.getVariables();
     }
     
@@ -31,7 +31,7 @@ public class FeasibleRegionFactory {
      * 
      * @param variables The variables.
      */
-    public FeasibleRegionFactory(Collection<String> variables) {
+    public FeasibleRegion2DFactory(Collection<String> variables) {
         this.variables = new ArrayList(variables);
     }
     
@@ -40,7 +40,7 @@ public class FeasibleRegionFactory {
      * 
      * @param variables The variables.
      */
-    public FeasibleRegionFactory(String... variables) {
+    public FeasibleRegion2DFactory(String... variables) {
         this.variables = Arrays.asList(variables);
     }
 
@@ -51,8 +51,8 @@ public class FeasibleRegionFactory {
      * 
      * @return The region.
      */
-    public FeasibleRegion createFeasibleRegion(Constraint constraint) {
-        return new FeasibleRegion(variables, constraint);
+    public FeasibleRegion2D createFeasibleRegion(Constraint constraint) {
+        return new FeasibleRegion2D(variables, constraint);
     }
     
     /**
@@ -60,8 +60,8 @@ public class FeasibleRegionFactory {
      * 
      * @return The region.
      */
-    public FeasibleRegion createEmptyRegion() {
-        return new FeasibleRegion(variables);
+    public FeasibleRegion2D createEmptyRegion() {
+        return new FeasibleRegion2D(variables);
     }
     
 }

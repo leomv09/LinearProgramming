@@ -15,10 +15,10 @@ import static org.junit.Assert.*;
  */
 public class FeasibleRegionTest {
     
-    private final FeasibleRegionFactory factory;
+    private final FeasibleRegion2DFactory factory;
     
     public FeasibleRegionTest() {
-        this.factory = new FeasibleRegionFactory(new String[] {"x", "y"});
+        this.factory = new FeasibleRegion2DFactory(new String[] {"x", "y"});
     }
     
     @Test
@@ -27,7 +27,7 @@ public class FeasibleRegionTest {
         linear.add(-1, "x");
         linear.add(-3, "y");
         Constraint constraint = new Constraint(linear, Relationship.LEQ, 2);
-        FeasibleRegion region = factory.createFeasibleRegion(constraint);
+        FeasibleRegion2D region = factory.createFeasibleRegion(constraint);
         
         assertThat("Intersection should be empty", region.isEmpty(), is(true));
         assertThat("Intersection should be unbounded", region.isBounded(), is(false));
@@ -40,7 +40,7 @@ public class FeasibleRegionTest {
         linear.add(-3, "y");
         Constraint constraint = new Constraint(linear, Relationship.GEQ, 2);
         
-        FeasibleRegion region = factory.createFeasibleRegion(constraint);
+        FeasibleRegion2D region = factory.createFeasibleRegion(constraint);
         Collection<Point2D> vertex = region.getVertex();
         Collection<AbstractLine2D> lines = region.getLines();
         

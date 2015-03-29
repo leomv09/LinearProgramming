@@ -26,10 +26,10 @@ public class FeasibleRegion_Intersection_Test {
 
     @Test
     public void testIntersection_GQEDECXY_GQEINCXY() {
-        FeasibleRegion r1 = regions.GQE_DEC_XY;
-        FeasibleRegion r2 = regions.GQE_INC_XY;
+        FeasibleRegion2D r1 = regions.GQE_DEC_XY;
+        FeasibleRegion2D r2 = regions.GQE_INC_XY;
         
-        FeasibleRegion intersection = r1.intersection(r2);
+        FeasibleRegion2D intersection = r1.intersection(r2);
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
 
@@ -47,10 +47,10 @@ public class FeasibleRegion_Intersection_Test {
     
     @Test
     public void testIntersection_LQEDECXY_LQEINCXY() {
-        FeasibleRegion r1 = regions.LQE_DEC_XY;
-        FeasibleRegion r2 = regions.LQE_INC_XY;
+        FeasibleRegion2D r1 = regions.LQE_DEC_XY;
+        FeasibleRegion2D r2 = regions.LQE_INC_XY;
         
-        FeasibleRegion intersection = r1.intersection(r2);
+        FeasibleRegion2D intersection = r1.intersection(r2);
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
         
@@ -69,10 +69,10 @@ public class FeasibleRegion_Intersection_Test {
     
     @Test
     public void testIntersection_LQEDECXY_GQEINCY() {
-        FeasibleRegion r1 = regions.LQE_INC_XY;
-        FeasibleRegion r2 = regions.GQE_INC_Y;
+        FeasibleRegion2D r1 = regions.LQE_INC_XY;
+        FeasibleRegion2D r2 = regions.GQE_INC_Y;
         
-        FeasibleRegion intersection = r1.intersection(r2);
+        FeasibleRegion2D intersection = r1.intersection(r2);
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
         
@@ -84,10 +84,10 @@ public class FeasibleRegion_Intersection_Test {
     
     @Test
     public void testIntersection_GQEDECXY_GQEINCY() {
-        FeasibleRegion r1 = regions.GQE_INC_XY;
-        FeasibleRegion r2 = regions.GQE_INC_Y;
+        FeasibleRegion2D r1 = regions.GQE_INC_XY;
+        FeasibleRegion2D r2 = regions.GQE_INC_Y;
         
-        FeasibleRegion intersection = r1.intersection(r2);
+        FeasibleRegion2D intersection = r1.intersection(r2);
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
         

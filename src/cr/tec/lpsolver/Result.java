@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class Result {
     
-    FeasibleRegion feasibleRegion;//Feasible region of the problem.
+    FeasibleRegion2D feasibleRegion;//Feasible region of the problem.
     double optimumValue;//Best result depending on its type(min or max).
     Map<String, Double> variablesResult;//A map with the variable and its corresponding result.
     
@@ -20,7 +20,7 @@ public class Result {
      * @param region The feasible region of the problem.
      * @param OptimumValue The best result at the moment of evaluating the points.
      */
-    public Result(FeasibleRegion region, double OptimumValue)
+    public Result(FeasibleRegion2D region, double OptimumValue)
     {
         this.feasibleRegion = region;
         this.optimumValue = OptimumValue;
@@ -31,7 +31,7 @@ public class Result {
      * Obtains the feasible region of the prroblem's result.
      * @return feasible region of the problem.
      */
-    public FeasibleRegion getFeasibleRegion()
+    public FeasibleRegion2D getFeasibleRegion()
     {
         return this.feasibleRegion;
     }

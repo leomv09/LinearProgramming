@@ -19,7 +19,7 @@ import math.geom2d.polygon.SimplePolygon2D;
  * 
  * @author Leo
  */
-public class FeasibleRegion {
+public class FeasibleRegion2D {
     
     /**
      * The vertex of the feasible region.
@@ -48,7 +48,7 @@ public class FeasibleRegion {
      * 
      * @throws IllegalArgumentException If more than 2 variables are supplied.
      */
-    public FeasibleRegion(List<String> variables) throws IllegalArgumentException {
+    public FeasibleRegion2D(List<String> variables) throws IllegalArgumentException {
         if (variables.size() != 2) {
             throw new IllegalArgumentException("The plot must have 2 dimensions.");
         }
@@ -64,7 +64,7 @@ public class FeasibleRegion {
      * @param variables An array that contains the name of the variables in the problem.
      * @param constraint The constraint.
      */
-    public FeasibleRegion(List<String> variables, Constraint constraint) {
+    public FeasibleRegion2D(List<String> variables, Constraint constraint) {
         this(variables);
         this.constraints.add(constraint);
         
@@ -175,7 +175,7 @@ public class FeasibleRegion {
             }
         }
         
-        this.sortVertex();
+        sortVertex();
     }
     
     /**
@@ -218,75 +218,64 @@ public class FeasibleRegion {
      * 
      * @return The intersection with the given feasible region.
      */
-    public FeasibleRegion intersection(FeasibleRegion region) {
-        List<AbstractLine2D> newLines = new ArrayList<>();
-        List<Point2D> newVertex = new ArrayList<>();
+    public FeasibleRegion2D intersection(FeasibleRegion2D region) {
+        FeasibleRegion2D r = new FeasibleRegion2D(this.variables);
+        r.constraints.addAll(this.constraints);
+        r.constraints.addAll(region.constraints);
         
-        GeometryUtils.getIntersections(this.lines, region.lines).stream().forEach((point) -> {
-            addVertex(newVertex, point);
-        });
+        for (Point2D point : GeometryUtils.getIntersections(this.lines, region.lines)) {
+            addVertex(r.vertex, point);
+        }
         
-        Collection<Point2D> vertexUnion = Utils.merge(this.vertex, region.vertex);
+        for (Point2D point : Utils.merge(this.vertex, region.vertex)) {
+            if (this.contains(point) && region.contains(point)) {
+                addVertex(r.vertex, point);
+            }
+        } 
         
-        vertexUnion.stream()
-                .filter((point) -> (this.contains(point) && region.contains(point)))
-                .forEach((point) -> {
-            addVertex(newVertex, point);
-        });
-        
-        if (!newVertex.isEmpty()) {
-            
-            Collection<AbstractLine2D> linesUnion = Utils.merge(this.lines, region.lines);
-            
+        if (!r.vertex.isEmpty()) {
             List<Point2D> intersections;
             Point2D start, end;
             
-            for (AbstractLine2D line : linesUnion) {
-                intersections = GeometryUtils.getIntersections(line, newVertex);
+            for (AbstractLine2D line : Utils.merge(this.lines, region.lines)) {
+                intersections = GeometryUtils.getIntersections(line, r.vertex);
                 if ( (intersections.size() == 1) && (line instanceof Ray2D) ) {
                     start = intersections.get(0);
-                    addLine(newLines, new Ray2D(start, line.direction().angle()));
+                    addLine(r.lines, new Ray2D(start, line.direction().angle()));
                 }
                 else if (intersections.size() == 2) {
                     start = intersections.get(0);
                     end = intersections.get(1);
-                    addLine(newLines, new LineSegment2D(start, end));
+                    addLine(r.lines, new LineSegment2D(start, end));
                 }
             }
         }
         
-        FeasibleRegion r = new FeasibleRegion(this.variables);
-        
-        r.lines = newLines;
-        r.vertex = newVertex;
-        r.constraints.addAll(this.constraints);
-        r.constraints.addAll(region.constraints);
         r.sortVertex();
-        
         return r;
     }
     
     /**
-     * Clip the region to the box described as (0, x, 0, y).
+     * Get the clipped region to the box described as (0, x, 0, y).
      * 
      * @param x The width of the box.
      * @param y The height of the box.
      * 
      * @return The clipped region.
      */
-    public FeasibleRegion clip(double x, double y) {
-        FeasibleRegion r = new FeasibleRegion(this.variables);
+    public FeasibleRegion2D clip(double x, double y) {
+        FeasibleRegion2D r = new FeasibleRegion2D(this.variables);
         
         Linear linear;
         Constraint constraint;
         
         linear = new Linear();
-        linear.add(1, "x");
+        linear.add(1, variables.get(0));
         constraint = new Constraint(linear, Relationship.LEQ, x);
         r.constraints.add(constraint);
         
         linear = new Linear();
-        linear.add(1, "y");
+        linear.add(1, variables.get(1));
         constraint = new Constraint(linear, Relationship.LEQ, y);
         r.constraints.add(constraint);
         
@@ -353,14 +342,14 @@ public class FeasibleRegion {
      * If two points have the same angle, the one closer to the center go first.
      */
     private void sortVertex() {
-        Polygon2D polygon = new SimplePolygon2D(this.vertex);
+        Polygon2D polygon = new SimplePolygon2D(vertex);
         Box2D box = polygon.boundingBox();
         
         double centerX = box.getMinX() + ((box.getMaxX() - box.getMinX()) / 2);
         double centerY = box.getMinY() + ((box.getMaxY() - box.getMinY()) / 2);
         Point2D center = new Point2D(centerX, centerY);
 
-        Collections.sort(this.vertex, (Point2D p1, Point2D p2) -> {
+        Collections.sort(vertex, (Point2D p1, Point2D p2) -> {
             double angle1 = Math.atan2(p1.y() - center.y(), p1.x() - center.x());
             double angle2 = Math.atan2(p2.y() - center.y(), p2.x() - center.x());
             double comparation = angle1 - angle2;
@@ -381,7 +370,7 @@ public class FeasibleRegion {
      * @return True if the is empty.
      */
     public boolean isEmpty() {
-        return this.vertex.isEmpty() && this.lines.isEmpty();
+        return vertex.isEmpty() && lines.isEmpty();
     }
     
     /**
@@ -390,7 +379,15 @@ public class FeasibleRegion {
      * @return True if the is bounded.
      */
     public boolean isBounded() {
-        return !this.isEmpty() && lines.stream().noneMatch((line) -> (line instanceof Ray2D));
+        if (!isEmpty()) {
+            for (AbstractLine2D line : lines) {
+                if (line instanceof Ray2D) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -399,7 +396,7 @@ public class FeasibleRegion {
      * @return The vertex with the maximum X coordinate.
      */
     public double getMaxX() {
-        Polygon2D polygon = new SimplePolygon2D(this.vertex);
+        Polygon2D polygon = new SimplePolygon2D(vertex);
         Box2D box = polygon.boundingBox();
         return box.getMaxX();
     }
@@ -410,7 +407,7 @@ public class FeasibleRegion {
      * @return The vertex with the maximum Y coordinate.
      */
     public double getMaxY() {
-        Polygon2D polygon = new SimplePolygon2D(this.vertex);
+        Polygon2D polygon = new SimplePolygon2D(vertex);
         Box2D box = polygon.boundingBox();
         return box.getMaxY();
     }

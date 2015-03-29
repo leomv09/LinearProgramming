@@ -1,10 +1,10 @@
 package cr.tec.lpsolver.objects;
 
-import cr.tec.lpsolver.FeasibleRegion;
-import cr.tec.lpsolver.FeasibleRegionFactory;
+import cr.tec.lpsolver.FeasibleRegion2D;
+import cr.tec.lpsolver.FeasibleRegion2DFactory;
 
 /**
- * Contains some useful predefined {@link FeasibleRegion}.
+ * Contains some useful predefined {@link FeasibleRegion2D}.
  * 
  * @author jose
  */
@@ -15,69 +15,69 @@ public class FeasibleRegionObjects {
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#GQE_DEC_XY}.
      */
-    public final FeasibleRegion GQE_DEC_XY;
+    public final FeasibleRegion2D GQE_DEC_XY;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#GQE_INC_XY}.
      */
-    public final FeasibleRegion GQE_INC_XY;
+    public final FeasibleRegion2D GQE_INC_XY;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#GQE_INC_X}.
      */
-    public final FeasibleRegion GQE_INC_X;
+    public final FeasibleRegion2D GQE_INC_X;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#GQE_INC_Y}.
      */
-    public final FeasibleRegion GQE_INC_Y;
+    public final FeasibleRegion2D GQE_INC_Y;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#GQE_X}.
      */
-    public final FeasibleRegion GQE_X;
+    public final FeasibleRegion2D GQE_X;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#GQE_Y}.
      */
-    public final FeasibleRegion GQE_Y;
+    public final FeasibleRegion2D GQE_Y;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#LQE_DEC_XY}.
      */
-    public final FeasibleRegion LQE_DEC_XY;
+    public final FeasibleRegion2D LQE_DEC_XY;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#LQE_INC_XY}.
      */
-    public final FeasibleRegion LQE_INC_XY;
+    public final FeasibleRegion2D LQE_INC_XY;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#LQE_INC_X}.
      */
-    public final FeasibleRegion LQE_INC_X;
+    public final FeasibleRegion2D LQE_INC_X;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#LQE_INC_Y}.
      */
-    public final FeasibleRegion LQE_INC_Y;
+    public final FeasibleRegion2D LQE_INC_Y;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#LQE_X}.
      */
-    public final FeasibleRegion LQE_X;
+    public final FeasibleRegion2D LQE_X;
     
     /**
      * Feasible region defined by the constraint {@link ConstraintObjects#LQE_Y}.
      */
-    public final FeasibleRegion LQE_Y;
+    public final FeasibleRegion2D LQE_Y;
     
     /**
      * Construct a new {@code FeasibleRegionObjects}.
      */
     private FeasibleRegionObjects() {
         String[] variables = new String[] {"x", "y"};
-        FeasibleRegionFactory factory = new FeasibleRegionFactory(variables);
+        FeasibleRegion2DFactory factory = new FeasibleRegion2DFactory(variables);
         ConstraintObjects constraints = ConstraintObjects.getInstance();
         
         this.GQE_DEC_XY = factory.createFeasibleRegion(constraints.GQE_DEC_XY);

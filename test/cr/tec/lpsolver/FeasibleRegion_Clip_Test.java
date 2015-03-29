@@ -24,8 +24,7 @@ public class FeasibleRegion_Clip_Test {
     
     @Test
     public void testClip_GQE_INC_XY() {
-        FeasibleRegion region = regions.GQE_INC_XY;
-        region.clip(6, 8);
+        FeasibleRegion2D region = regions.GQE_INC_XY.clip(6, 8);
         Collection<Point2D> vertex = region.getVertex();
         Collection<AbstractLine2D> lines = region.getLines();
         

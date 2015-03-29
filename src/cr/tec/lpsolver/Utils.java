@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 /**
  *
- * @author José Andrés García <jags9415@gmail.com>
+ * jose
  */
 public class Utils {
     

@@ -22,18 +22,18 @@ public class GraphicalSolver implements Solver {
     @Override
     public Result solve(Problem problem) {
         
-        FeasibleRegionFactory regionFactory = new FeasibleRegionFactory(problem);
-        FeasibleRegion region = null;
+        FeasibleRegion2DFactory factory = new FeasibleRegion2DFactory(problem);
+        FeasibleRegion2D region = null;
         
         for(Constraint cons : problem.getConstraints())
         {
             if(region == null)
             {
-                region = regionFactory.createFeasibleRegion(cons);
+                region = factory.createFeasibleRegion(cons);
             }
             else
             {
-                FeasibleRegion region2 = regionFactory.createFeasibleRegion(cons);
+                FeasibleRegion2D region2 = factory.createFeasibleRegion(cons);
                 region = region.intersection(region2);
             }
         }

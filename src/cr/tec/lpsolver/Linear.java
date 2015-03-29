@@ -30,9 +30,9 @@ public class Linear implements Iterable<Term> {
      */
     public List<String> getVariables() {
         List<String> variables = new ArrayList<>();
-        terms.stream().forEach((term) -> {
+        for (Term term : terms) {
             variables.add(term.getVariable());
-        });
+        }
         return variables;
     }
     
@@ -43,9 +43,9 @@ public class Linear implements Iterable<Term> {
      */
     public List<Double> getCoefficients() {
         List<Double> coefficients = new ArrayList<>();
-        terms.stream().forEach((term) -> {
+        for (Term term : terms) {
             coefficients.add(term.getCoefficient());
-        });
+        }
         return coefficients;
     }
     

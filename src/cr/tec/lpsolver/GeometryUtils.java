@@ -115,7 +115,12 @@ public class GeometryUtils {
      * @return True if the list contains the line.
      */
     public static boolean containsLine(Collection<AbstractLine2D> list, AbstractLine2D line) {
-        return list.stream().anyMatch((l) -> (l.almostEquals(line, 0.00001)));
+        for (AbstractLine2D l : list) {
+            if (l.almostEquals(line, 0.00001)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -128,7 +133,12 @@ public class GeometryUtils {
      * @return True if the list contains the point.
      */
     public static boolean containsPoint(Collection<Point2D> list, Point2D point) {
-        return list.stream().anyMatch((p) -> (p.almostEquals(point, 0.00001)));
+        for (Point2D p : list) {
+            if (p.almostEquals(point, 0.00001)) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }
