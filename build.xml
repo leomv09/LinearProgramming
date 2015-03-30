@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="LinearProgramming" default="default" basedir=".">
-    <description>Builds, tests, and runs the project LinearProgramming.</description>
+<project name="lpsolver" default="default" basedir=".">
+    <description>Builds, tests, and runs the project lpsolver.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -58,7 +58,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="LinearProgramming-impl.jar">
+        <target name="run" depends="lpsolver-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>
@@ -70,4 +70,16 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <target name="-pre-init">
+      <property name="project.name" value="lpsolver" />
+      <property name="version.num" value="1.0.0" />
+   </target>
+
+   <target name="-post-jar">
+    <copy file="${dist.jar}" tofile="${dist.dir}/${project.name}-${version.num}.jar" />
+    <delete file="${dist.jar}" />
+    <delete file="manifest.mf" />
+  </target>
+
 </project>
