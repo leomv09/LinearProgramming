@@ -20,63 +20,65 @@ public class GraphicalSolver implements Solver {
      * feasible solution.
      */
     @Override
-    public Result solve(Problem problem) {
+    public Result solve(Problem problem) throws Exception {
         
         FeasibleRegion2DFactory factory = new FeasibleRegion2DFactory(problem);
         FeasibleRegion2D region = null;
         
-        for(Constraint cons : problem.getConstraints())
+        for (Constraint cons : problem.getConstraints())
         {
-            if(region == null)
+            if (region == null)
             {
                 region = factory.createFeasibleRegion(cons);
             }
             else
             {
-                FeasibleRegion2D region2 = factory.createFeasibleRegion(cons);
-                region = region.intersection(region2);
+                region = region.intersection(factory.createFeasibleRegion(cons));
             }
         }
         
-        if(region != null)
+        if (region != null && !region.isEmpty())
         {
-            Point2D optimumPoint = getMinMax(region.getVertex(), problem.getProblemType(), problem.getObjetiveFunction());
+            Point2D optimum = getOptimun(region.getVertex(), problem.getProblemType(), problem.getObjetiveFunction());
             Map<String, Double> values = new HashMap();
-            values.put("x", optimumPoint.getX());
-            values.put("y", optimumPoint.getY());
+            values.put("x", optimum.getX());
+            values.put("y", optimum.getY());
         
             Result res = new Result(region, problem.getObjetiveFunction().evaluate(values));
-            res.addVariable("x",  optimumPoint.getX());
-            res.addVariable("y",  optimumPoint.getY());
+            res.addVariable("x",  optimum.getX());
+            res.addVariable("y",  optimum.getY());
             return res;
         }
         else
         {
-            return null;
+            throw new Exception("Empty region. No solutions.");
         }
     }
     
     
     /**
      * Obtains the optimum point (min or max) of a feasible region.
+     * 
      * @param vertex A list of vertex from the feasible region.
      * @param type The problem type (min or max).
      * @param objectiveFunction The Linear objective function of the problem.
+     * 
      * @return The optimum Point2D (point) of the feasible region.
      */
-    private Point2D getMinMax(Collection<Point2D> vertex, ProblemType type, Linear objectiveFunction)
+    private Point2D getOptimun(Collection<Point2D> vertex, ProblemType type, Linear objectiveFunction)
     {
         Point2D currentPoint = null;
         double currentValue;
-        if(type == ProblemType.MAX)
+        
+        if (type == ProblemType.MAX)
         {
             currentValue = 0.0;
-            for(Point2D point : vertex)
+            for (Point2D point : vertex)
             {
                 Map<String, Double> values = new HashMap();
                 values.put("x", point.getX());
                 values.put("y", point.getY());
-                if(currentValue < objectiveFunction.evaluate(values))
+                if (currentValue < objectiveFunction.evaluate(values))
                 {
                     currentPoint = point;
                     currentValue = objectiveFunction.evaluate(values);
@@ -87,12 +89,12 @@ public class GraphicalSolver implements Solver {
         else
         {
             currentValue = Double.POSITIVE_INFINITY;
-            for(Point2D point : vertex)
+            for (Point2D point : vertex)
             {
                 Map<String, Double> values = new HashMap();
                 values.put("x", point.getX());
                 values.put("y", point.getY());
-                if(currentValue > objectiveFunction.evaluate(values))
+                if (currentValue > objectiveFunction.evaluate(values))
                 {
                     currentPoint = point;
                     currentValue = objectiveFunction.evaluate(values);
