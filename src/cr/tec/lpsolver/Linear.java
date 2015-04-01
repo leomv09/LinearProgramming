@@ -24,6 +24,75 @@ public class Linear implements Iterable<Term> {
     }
 
     /**
+     * Adds a linear object with another one, and returns the result as a new linear object.
+     * @param linear The linear object to add.
+     * @return a new Linear object with the result of the addition.
+     */
+    public Linear linearAddition(Linear linear)
+    {
+        List<String> variables = linear.getVariables();
+        if(variables != null & this.getVariables() != null)
+        {
+            Linear newLinear = new Linear();
+            for(Term term : linear.getTerms())
+            {
+                for(Term term2 : this.getTerms())
+                {
+                    if(term.getVariable() != null)
+                    {
+                        if(term2.getVariable() != null)
+                        {
+                            if(term2.getVariable().equals(term.getVariable()))//Adding terms with same variable.
+                            {
+                                newLinear.add(term.getCoefficient() + term2.getCoefficient(), term.getVariable());
+                                this.getTerms().remove(term2);
+                            }
+                        }
+                    }
+                    else//Adding terms that don't have variables.
+                    {
+                        if(term2.getVariable() == null)
+                        {
+                            newLinear.add(term.getCoefficient() + term2.getCoefficient(), null);
+                            this.getTerms().remove(term2);
+                        }
+                    }
+                }
+            }
+            if(newLinear.getTerms().size() > 0)
+            {
+                return newLinear;
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
+        
+        return null;
+    }
+    
+    
+    /**
+     * Obtains the times (*) operation  between a number and a linear object.
+     * @param number The double number to be multiplied for the linear object.
+     * @return The multiplication between the number and each of the terms of the linear object.
+     */
+    public Linear numberTimesLinear(double number)
+    {
+        Linear linear = new Linear();
+        
+        for(Term term : this.terms)
+        {
+            linear.add(number * term.getCoefficient(), term.getVariable());
+        }
+        
+        return linear;
+    }
+    
+    
+    /**
      * Returns the variables.
      * 
      * @return The variables.
@@ -63,6 +132,15 @@ public class Linear implements Iterable<Term> {
             }
         }
         return Double.NaN;
+    }
+    
+    /**
+     * Obtains the terms
+     * @return 
+     */
+    public List<Term> getTerms()
+    {
+        return this.terms;
     }
     
     /**

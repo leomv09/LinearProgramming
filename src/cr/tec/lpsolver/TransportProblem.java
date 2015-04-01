@@ -1,7 +1,9 @@
 package cr.tec.lpsolver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -341,10 +343,70 @@ public class TransportProblem {
         return Arrays.binarySearch(this.consumers, consumer);
     }
     
-    public Problem toProblem() {
+    
+    /**
+     * Obtains the objective function based on the constraints. 
+     * Multiplies the cost matrix with the shipping matrix and the results are added up together.
+     * 
+     * @param shippingTable The table of constraints.
+     * 
+     * @return a Linear object resulting from the operations.
+     */
+    private Linear getObjectiveFunction(Constraint[][] shippingTable)
+    {
+        Linear objFunction = new Linear();
+        List<Linear> linearTerms = new ArrayList<>();
+        for(int i = 0; i < this.producers.length; i++)
+        {
+            for(int j = 0; j < this.consumers.length; j++)
+            {
+                Linear linear = (shippingTable[i][j]).getLinear().numberTimesLinear(costTable[i][j]);
+                linearTerms.add(linear);
+            }
+        }
+        objFunction = linearTerms.get(0);
+        linearTerms.remove(0);
+        
+        for(Linear l : linearTerms)
+        {
+            objFunction = objFunction.linearAddition(l);
+        }
+        
+        return objFunction;
+    }
+    
+    
+    /**
+     * Obtains the constraints from the shipping table(constraints matrix).
+     * 
+     * @param shippingTable a matrix that stores the shipping values.
+     * 
+     * @return A list of Constraints.
+     */
+    private List<Constraint> getConstraints(Constraint[][] shippingTable)
+    {
+        List<Constraint> constraints = new ArrayList<>();
+        for(int i = 0; i < this.producers.length; i++)
+        {
+            for(int j = 0; j< this.consumers.length; j++)
+            {
+                constraints.add(shippingTable[i][j]);
+            }
+        }
+        return constraints;
+    }
+    
+    
+    /**
+     * Converts a transport problem to an object Problem.
+     * 
+     * @return a Problem object.
+     */
+    public Problem toProblem() 
+    {
         
         Constraint[][] shippingTable = new Constraint[producers.length][consumers.length];
-        
+        String[] variables = {"x", "y"};
         for(int i = 0; i <= producers.length; i++)
         {
             
@@ -352,33 +414,59 @@ public class TransportProblem {
             {
                 if(i == 0)
                 {  
-                    if(j == 0)
+                    if(j == 0 || j == 1)
                     {
                         Linear linear = new Linear();
-                        linear.add(1, "x");
+                        linear.add(1, variables[j]);
                         Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
                         shippingTable[i][j] = cons;
                     }
-                    else if(j == 1)
+                   else
                     {
                         Linear linear = new Linear();
-                        linear.add(1, "y");
+                        linear.add(production[i], null);
+                        linear.add(-1, "x");
+                        linear.add(-1, "y");
+                        Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
+                        shippingTable[i][j] = cons;
+                    }
+                }
+                else
+                {
+                    if(j == 0 || j == 1)
+                    {
+                        Constraint currentConstr = shippingTable[0][j];
+                        Linear linear = new Linear();
+                        String variable = currentConstr.getLinear().getVariables().get(0);
+                        linear.add(demand[j], null);
+                        linear.add(-1, variable);
                         Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
                         shippingTable[i][j] = cons;
                     }
                     else
                     {
-                        
+                        Constraint cons1 = shippingTable[i][j-2];
+                        Constraint cons2 = shippingTable[i][j-1];
+                        Linear linear = new Linear();
+                        linear.add(production[i], null);
+                        linear.add(- cons1.getLinear().getTerms().get(0).getCoefficient(), cons1.getLinear().getTerms().get(0).getVariable());
+                        linear.add(cons1.getLinear().getTerms().get(1).getCoefficient(), cons1.getLinear().getTerms().get(1).getVariable());
+                        linear.add(- cons2.getLinear().getTerms().get(0).getCoefficient(), cons2.getLinear().getTerms().get(0).getVariable());
+                        linear.add(- cons2.getLinear().getTerms().get(1).getCoefficient(), cons2.getLinear().getTerms().get(1).getVariable());
+                        //Linear needs to be simplified!!
+                        Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
+                        shippingTable[i][j] = cons;
                     }
-                }
-                else
-                {
-                    
                 }
             }
         }
         
-        throw new UnsupportedOperationException("Not supported yet.");
+        Problem problem = new Problem();
+        problem.setObjetiveFunction(getObjectiveFunction(shippingTable));
+        problem.setConstraints(getConstraints(shippingTable));
+        problem.setProblemType(ProblemType.MIN);
+        
+        return problem;
     }
 
 }

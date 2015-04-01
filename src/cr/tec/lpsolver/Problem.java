@@ -48,6 +48,17 @@ public class Problem {
     }
 
     /**
+     * Sets all the problem constraints of once.
+     * @param cons the list of constraints.
+     */
+    public void setConstraints(List<Constraint> cons)
+    {
+        for(Constraint con : cons)
+        {
+            this.addConstraint(con);
+        }
+    }
+    /**
      * Returns the constraints.
      * 
      * @return The constraints.
