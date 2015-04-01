@@ -1,10 +1,10 @@
 package cr.tec.lpsolver;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The class {@code Linear} is a linear expression consisting of variables and
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Linear implements Iterable<Term> {
     
-    protected final List<Term> terms;
+    private final List<Term> terms;
     
     /**
      * Constructs an empty linear expression.
@@ -25,24 +25,26 @@ public class Linear implements Iterable<Term> {
 
     /**
      * Adds a linear object with another one, and returns the result as a new linear object.
+     * 
      * @param linear The linear object to add.
+     * 
      * @return a new Linear object with the result of the addition.
      */
     public Linear linearAddition(Linear linear)
     {
         List<String> variables = linear.getVariables();
-        if(variables != null & this.getVariables() != null)
+        if (variables != null & this.getVariables() != null)
         {
             Linear newLinear = new Linear();
-            for(Term term : linear.getTerms())
+            for (Term term : linear.getTerms())
             {
-                for(Term term2 : this.getTerms())
+                for (Term term2 : this.getTerms())
                 {
-                    if(term.getVariable() != null)
+                    if (term.getVariable() != null)
                     {
-                        if(term2.getVariable() != null)
+                        if (term2.getVariable() != null)
                         {
-                            if(term2.getVariable().equals(term.getVariable()))//Adding terms with same variable.
+                            if (term2.getVariable().equals(term.getVariable()))//Adding terms with same variable.
                             {
                                 newLinear.add(term.getCoefficient() + term2.getCoefficient(), term.getVariable());
                                 this.getTerms().remove(term2);
@@ -51,7 +53,7 @@ public class Linear implements Iterable<Term> {
                     }
                     else//Adding terms that don't have variables.
                     {
-                        if(term2.getVariable() == null)
+                        if (term2.getVariable() == null)
                         {
                             newLinear.add(term.getCoefficient() + term2.getCoefficient(), null);
                             this.getTerms().remove(term2);
@@ -59,7 +61,7 @@ public class Linear implements Iterable<Term> {
                     }
                 }
             }
-            if(newLinear.getTerms().size() > 0)
+            if (newLinear.getTerms().size() > 0)
             {
                 return newLinear;
             }
@@ -73,24 +75,24 @@ public class Linear implements Iterable<Term> {
         return null;
     }
     
-    
     /**
      * Obtains the times (*) operation  between a number and a linear object.
+     * 
      * @param number The double number to be multiplied for the linear object.
+     * 
      * @return The multiplication between the number and each of the terms of the linear object.
      */
     public Linear numberTimesLinear(double number)
     {
         Linear linear = new Linear();
         
-        for(Term term : this.terms)
+        for (Term term : this.terms)
         {
             linear.add(number * term.getCoefficient(), term.getVariable());
         }
         
         return linear;
     }
-    
     
     /**
      * Returns the variables.
@@ -135,12 +137,55 @@ public class Linear implements Iterable<Term> {
     }
     
     /**
-     * Obtains the terms
-     * @return 
+     * Obtains the terms.
+     * 
+     * @return The terms.
      */
     public List<Term> getTerms()
     {
-        return this.terms;
+        return terms;
+    }
+    
+    /**
+     * Get the term with a given variable.
+     * 
+     * @param variable The variable.
+     * @return The term or null if no term have that variable.
+     */
+    public Term getTerm(String variable) {
+        for (Term term : terms) {
+            if (term.getVariable().equalsIgnoreCase(variable)) {
+                return term;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Add a term to the linear expression.
+     * 
+     * @param term The term.
+     */
+    public void add(Term term) {
+        Term t = getTerm(term.getVariable());
+        if (t != null) {
+            terms.remove(t);
+            terms.add(new Term(term.getVariable(), term.getCoefficient() + t.getCoefficient()));
+        }
+        else {
+            terms.add(term);
+        }
+    }
+    
+    /**
+     * Adds terms to the linear expression.
+     * 
+     * @param terms The terms to be added.
+     */
+    public void add(Term... terms) {
+        for (Term term : terms) {
+            add(term);
+        }
     }
     
     /**
@@ -151,16 +196,7 @@ public class Linear implements Iterable<Term> {
      */
     public void add(double coefficient, String variable) {
         Term term = new Term(variable, coefficient);
-        this.add(term);
-    }
-    
-    /**
-     * Adds terms to the linear expression.
-     * 
-     * @param terms The terms to be added.
-     */
-    public void add(Term... terms) {
-        this.terms.addAll(Arrays.asList(terms));
+        add(term);
     }
     
     /**
@@ -239,4 +275,25 @@ public class Linear implements Iterable<Term> {
         }
         return sb.toString();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.terms);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Linear other = (Linear) obj;
+        return Objects.equals(this.terms, other.terms);
+    }
+    
+    
 }
