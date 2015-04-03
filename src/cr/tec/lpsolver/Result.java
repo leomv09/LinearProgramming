@@ -2,6 +2,7 @@ package cr.tec.lpsolver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,22 +11,22 @@ import java.util.Map;
  * 
  * @author Leo
  */
-public class Result {
+public class Result implements Iterable {
     
     /**
      * A map with the variable and its corresponding result.
      */
-    List<Map<String, Double>> resultSet;
+    private final List<Map<String, Double>> resultSet;
     
     /**
      * Feasible region of the problem.
      */
-    FeasibleRegion2D feasibleRegion;
+    private final FeasibleRegion2D feasibleRegion;
     
     /**
      * Best result depending on its type(min or max).
      */
-    double optimumValue;
+    private final double optimumValue;
     
     /**
      * Creates a new instance of Result. 
@@ -38,7 +39,6 @@ public class Result {
         this.feasibleRegion = region;
         this.optimumValue = optimumValue;
         this.resultSet = new ArrayList<>();
-        this.createSet();
     }
     
     /**
@@ -56,7 +56,7 @@ public class Result {
      * 
      * @return The optimum value.
      */
-    public double getOptimumResult()
+    public double getOptimumValue()
     {
         return optimumValue;
     }
@@ -79,6 +79,10 @@ public class Result {
      * @param index The result index.
      */
     public void addVariable(String variable, Double result, int index) {
+        if (resultSet.isEmpty()) {
+            createSet();
+        }
+        
         try {
             Map<String, Double> set = resultSet.get(index);
             set.put(variable, result);
@@ -122,5 +126,10 @@ public class Result {
      */
     public int size() {
         return resultSet.size();
+    }
+
+    @Override
+    public Iterator iterator() {
+        return resultSet.iterator();
     }
 }
