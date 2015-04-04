@@ -70,8 +70,8 @@ public class TransportProblemToProblemTest {
         linear = new Linear();
         linear.add(1, "x");
         linear.add(1, "y");
-        constraint = new Constraint(linear, Relationship.GEQ, -200.0);
-        assertThat("Problem has constraint [x + y >= -200]", cons, hasItem(constraint));
+        constraint = new Constraint(linear, Relationship.GEQ, 200.0);
+        assertThat("Problem has constraint [x + y >= 200]", cons, hasItem(constraint));
     }
     
 }

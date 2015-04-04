@@ -417,15 +417,18 @@ public class TransportProblem {
                     {
                         Linear linear = shippingTable[i][j].getLinear();
                         double res = demand[j] - production[i-1];
-                        if(res < 0)
+                        linear = linear.numberTimesLinear(-1);
+                        Constraint cons = new Constraint(linear, Relationship.LEQ, res);
+                        if(cons.isNegative())
                         {
-                            Constraint cons = new Constraint(linear, Relationship.GEQ, res);
+                            linear = linear.numberTimesLinear(-1);
+                            cons = new Constraint(linear, Relationship.GEQ, res*-1);
                             constraints.add(cons);
                         }
                         else
                         {
                             linear = linear.numberTimesLinear(-1);
-                            Constraint cons = new Constraint(linear, Relationship.LEQ, res);
+                            cons = new Constraint(linear, Relationship.LEQ, res);
                             constraints.add(cons);
                         }
                     }
