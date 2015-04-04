@@ -1,16 +1,17 @@
 package cr.tec.lpsolver;
 
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import java.util.List;
+import org.junit.Test;
 
 /**
  *
  * @author jose
  */
-public class TransportProblem_ToProblem_Test {
+public class TransportProblemToProblemTest {
     
     private TransportProblem problem;
     

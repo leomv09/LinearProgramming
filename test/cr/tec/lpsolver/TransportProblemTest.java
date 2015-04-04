@@ -1,10 +1,11 @@
 package cr.tec.lpsolver;
 
-import java.util.Map;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import java.util.Map;
 
 /**
  *

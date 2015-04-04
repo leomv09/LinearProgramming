@@ -1,26 +1,27 @@
 package cr.tec.lpsolver;
 
-import cr.tec.lpsolver.objects.FeasibleRegionObjects;
-import static cr.tec.lpsolver.objects.matchers.ContainsLineMatcher.containsRay;
-import static cr.tec.lpsolver.objects.matchers.ContainsPointMatcher.containsPoint;
 import static cr.tec.lpsolver.objects.matchers.ContainsLineMatcher.containsSegment;
+import static cr.tec.lpsolver.objects.matchers.ContainsPointMatcher.containsPoint;
+import static cr.tec.lpsolver.objects.matchers.ContainsLineMatcher.containsRay;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+import cr.tec.lpsolver.objects.FeasibleRegionObjects;
+import math.geom2d.line.AbstractLine2D;
 import java.util.Collection;
 import math.geom2d.Point2D;
-import math.geom2d.line.AbstractLine2D;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 
 /**
  * A class for testing the method {@link cr.tec.lpsolver.FeasibleRegion#intersection(cr.tec.lpsolver.FeasibleRegion)}.
  * 
  * @author jose
  */
-public class FeasibleRegion_Intersection_Test {
+public class FeasibleRegionIntersectionTest {
     
     private final FeasibleRegionObjects regions;
     
-    public FeasibleRegion_Intersection_Test() {
+    public FeasibleRegionIntersectionTest() {
         this.regions = FeasibleRegionObjects.getInstance();
     }
 
@@ -33,16 +34,16 @@ public class FeasibleRegion_Intersection_Test {
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
 
-        assertThat("Intersection should be unbounded", intersection.isBounded(), is(false));
+        assertFalse("Intersection should be unbounded", intersection.isBounded());
         
         assertThat("Have vertex (0, 6)", vertex, containsPoint(0, 6));
         assertThat("Have vertex (2.4, 2.4)", vertex, containsPoint(2.4, 2.4));
-        assertThat("Have 2 vertex", vertex.size(), is(2));
+        assertThat("Have 2 vertex", vertex, hasSize(2));
         
         assertThat("Have segment (0, 6) - (2.4, 2.4)", lines, containsSegment(0, 6, 2.4, 2.4));
         assertThat("Have ray (0, 6) - 90°", lines, containsRay(0, 6, 90));
         assertThat("Have ray (2.4, 2.4) - 45°", lines, containsRay(2.4, 2.4, 45));
-        assertThat("Have 3 lines", lines.size(), is(3));
+        assertThat("Have 3 lines", lines, hasSize(3));
     }
     
     @Test
@@ -54,17 +55,17 @@ public class FeasibleRegion_Intersection_Test {
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
         
-        assertThat("Intersection should be bounded", intersection.isBounded(), is(true));
+        assertTrue("Intersection should be bounded", intersection.isBounded());
         
         assertThat("Have vertex (0, 0)", vertex, containsPoint(0, 0));
         assertThat("Have vertex (2.4, 2.4)", vertex, containsPoint(2.4, 2.4));
         assertThat("Have vertex (4, 0)", vertex, containsPoint(4, 0));
-        assertThat("Have 3 vertex", vertex.size(), is(3));
+        assertThat("Have 3 vertex", vertex, hasSize(3));
         
         assertThat("Have segment (0, 0) - (2.4, 2.4)", lines, containsSegment(0, 0, 2.4, 2.4));
         assertThat("Have segment (2.4, 2.4) - (4, 0)", lines, containsSegment(2.4, 2.4, 4, 0));
         assertThat("Have segment (4, 0) - (0, 0)", lines, containsSegment(4, 0, 0, 0));
-        assertThat("Have 3 lines", lines.size(), is(3));
+        assertThat("Have 3 lines", lines, hasSize(3));
     }
     
     @Test
@@ -76,10 +77,10 @@ public class FeasibleRegion_Intersection_Test {
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
         
-        assertThat("Intersection should be unbounded", intersection.isBounded(), is(false));
-        assertThat("Intersection should be empty", intersection.isEmpty(), is(true));
-        assertThat("Have no vertex", vertex.size(), is(0));
-        assertThat("Have no lines", lines.size(), is(0));
+        assertFalse("Intersection should be unbounded", intersection.isBounded());
+        assertTrue("Intersection should be empty", intersection.isEmpty());
+        assertThat("Have no vertex", vertex, empty());
+        assertThat("Have no lines", lines, empty());
     }
     
     @Test
@@ -91,15 +92,15 @@ public class FeasibleRegion_Intersection_Test {
         Collection<Point2D> vertex = intersection.getVertex();
         Collection<AbstractLine2D> lines = intersection.getLines();
         
-        assertThat("Intersection should be unbounded", intersection.isBounded(), is(false));
-        assertThat("Intersection should not be empty", intersection.isEmpty(), is(false));
+        assertFalse("Intersection should be unbounded", intersection.isBounded());
+        assertFalse("Intersection should not be empty", intersection.isEmpty());
         
         assertThat("Have vertex (0, 3)", vertex, containsPoint(0, 3));
-        assertThat("Have 1 vertex", vertex.size(), is(1));
+        assertThat("Have 1 vertex", vertex, hasSize(1));
         
         assertThat("Have ray (0, 3) - 90°", lines, containsRay(0, 3, 90));
         assertThat("Have ray (0, 3) - 63.434948822922°", lines, containsRay(0, 3, 63.434948822922));
-        assertThat("Have 2 lines", lines.size(), is(2));
+        assertThat("Have 2 lines", lines, hasSize(2));
     }
     
 }

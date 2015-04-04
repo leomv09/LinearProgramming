@@ -1,9 +1,8 @@
 package cr.tec.lpsolver;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 /**
  *
@@ -17,11 +16,8 @@ public class SimplexSolverTest {
         solver = new SimplexSolver();
     }
 
-    /**
-     * Test of solve method, of class SimplexSolver.
-     */
-    @Test
-    public void testMax() {
+    @Test(expected = UnsupportedOperationException.class)
+    public void testMax() throws Exception {
         Problem problem = new Problem();
         Linear linear;
         
@@ -50,12 +46,7 @@ public class SimplexSolverTest {
         linear.add(1.0, "x3");
         problem.addConstraint(linear, Relationship.LEQ, 100.0);
 
-        System.out.println(problem);
-        try {
-            Result result = solver.solve(problem);
-        } catch (Exception ex) {
-            Logger.getLogger(SimplexSolverTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Result result = solver.solve(problem);
     }
     
 }
