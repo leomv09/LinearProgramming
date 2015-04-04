@@ -392,7 +392,45 @@ public class TransportProblem {
         {
             for (int j = 0; j< consumers.length; j++)
             {
-                constraints.add(shippingTable[i][j]);
+                if(i == 0)
+                {
+                    if(j == 0 || j == 1)
+                    {
+                        constraints.add(shippingTable[i][j]);
+                    }
+                    else
+                    {
+                        Linear linear = shippingTable[i][j].getLinear().numberTimesLinear(-1);
+                        Constraint cons = new Constraint(linear, Relationship.LEQ, production[i]);
+                        constraints.add(cons);
+                    }
+                }
+                else
+                {
+                    if(j == 0 || j == 1)
+                    {
+                        Linear linear = shippingTable[i][j].getLinear().numberTimesLinear(-1);
+                        Constraint cons = new Constraint(linear, Relationship.LEQ, demand[j]);
+                        constraints.add(cons);
+                    }
+                    else
+                    {
+                        Linear linear = shippingTable[i][j].getLinear();
+                        double res = demand[j] - production[i-1];
+                        if(res < 0)
+                        {
+                            Constraint cons = new Constraint(linear, Relationship.GEQ, res);
+                            constraints.add(cons);
+                        }
+                        else
+                        {
+                            linear = linear.numberTimesLinear(-1);
+                            Constraint cons = new Constraint(linear, Relationship.LEQ, res);
+                            constraints.add(cons);
+                        }
+                    }
+                }
+                
             }
         }
         
@@ -410,9 +448,9 @@ public class TransportProblem {
         Constraint[][] shippingTable = new Constraint[producers.length][consumers.length];
         String[] variables = {"x", "y"};
         
-        for (int i = 0; i <= producers.length; i++)
+        for (int i = 0; i < producers.length; i++)
         {
-            for (int j = 0; j <= consumers.length; j++)
+            for (int j = 0; j < consumers.length; j++)
             {
                 if (i == 0)
                 {
@@ -426,7 +464,6 @@ public class TransportProblem {
                    else
                     {
                         Linear linear = new Linear();
-                        linear.add(production[i], null);
                         linear.add(-1, "x");
                         linear.add(-1, "y");
                         Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
@@ -440,7 +477,6 @@ public class TransportProblem {
                         Constraint currentConstr = shippingTable[0][j];
                         Linear linear = new Linear();
                         String variable = currentConstr.getLinear().getVariables().get(0);
-                        linear.add(demand[j], null);
                         linear.add(-1, variable);
                         Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
                         shippingTable[i][j] = cons;
@@ -450,11 +486,14 @@ public class TransportProblem {
                         Constraint cons1 = shippingTable[i][j-2];
                         Constraint cons2 = shippingTable[i][j-1];
                         Linear linear = new Linear();
-                        linear.add(production[i], null);
-                        linear.add(- cons1.getLinear().getTerms().get(0).getCoefficient(), cons1.getLinear().getTerms().get(0).getVariable());
-                        linear.add(cons1.getLinear().getTerms().get(1).getCoefficient(), cons1.getLinear().getTerms().get(1).getVariable());
-                        linear.add(- cons2.getLinear().getTerms().get(0).getCoefficient(), cons2.getLinear().getTerms().get(0).getVariable());
-                        linear.add(- cons2.getLinear().getTerms().get(1).getCoefficient(), cons2.getLinear().getTerms().get(1).getVariable());
+                        for(Term term : cons1.getLinear().getTerms())
+                        {
+                            linear.add(- term.getCoefficient(), term.getVariable());
+                        }
+                        for(Term term: cons2.getLinear().getTerms())
+                        {
+                            linear.add(- term.getCoefficient(), term.getVariable());
+                        }
                         Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
                         shippingTable[i][j] = cons;
                     }

@@ -36,6 +36,7 @@ public class Constraint {
         return linear;
     }
     
+
     /**
      * Returns the relationship.
      * 
@@ -44,6 +45,7 @@ public class Constraint {
     public Relationship getRelationship() {
         return relationship;
     }
+    
     
     /**
      * Returns the right-hand-side number.
@@ -54,6 +56,7 @@ public class Constraint {
         return constant;
     }
     
+    
     /**
      * Returns the size of the linear expression.
      * 
@@ -61,6 +64,28 @@ public class Constraint {
      */
     public int size() {
         return linear.size();
+    }
+    
+    
+    /**
+     * Checks if the constraint is negative.
+     * 
+     * @return true if the constraint is negative, false otherwise.
+     */
+    public boolean isNegative()
+    {
+        if(this.constant >= 0)
+        {
+            return false;
+        }
+        for(Term term : this.linear)
+        {
+            if(term.getCoefficient() >= 0)
+            {
+                return false;
+            }
+        }     
+        return true;
     }
     
     /**

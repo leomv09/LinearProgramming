@@ -33,29 +33,33 @@ public class Linear implements Iterable<Term> {
     public Linear linearAddition(Linear linear)
     {
         Linear newLinear = new Linear();
+        List<Term> termsToremove = new ArrayList<>();
         for(Term term : linear.getTerms())
         {
             for(Term term2 : this.getTerms())
             {
-                if(term.getVariable() != null)
+                if(!termsToremove.contains(term2))
                 {
-                    if(term2.getVariable() != null)
+                    if(term.getVariable() != null)
                     {
-                        if(term2.getVariable().equals(term.getVariable()))//Adding terms with same variable.
+                        if(term2.getVariable() != null)
                         {
-                            newLinear.add(term.getCoefficient() + term2.getCoefficient(), term.getVariable());
-                            this.getTerms().remove(term2);
-                            linear.getTerms().remove(term);
+                            if(term2.getVariable().equals(term.getVariable()))//Adding terms with same variable.
+                            {
+                                newLinear.add(term.getCoefficient() + term2.getCoefficient(), term.getVariable());
+                                termsToremove.add(term2);
+                                termsToremove.add(term);
+                            }
                         }
                     }
-                }
-                else//Adding terms that don't have variables.
-                {
-                    if(term2.getVariable() == null)
+                    else//Adding terms that don't have variables.
                     {
-                        newLinear.add(term.getCoefficient() + term2.getCoefficient(), null);
-                        this.getTerms().remove(term2);
-                        linear.getTerms().remove(term);
+                        if(term2.getVariable() == null)
+                        {
+                            newLinear.add(term.getCoefficient() + term2.getCoefficient(), null);
+                            termsToremove.add(term2);
+                            termsToremove.add(term);
+                        }
                     }
                 }
             }
@@ -63,13 +67,18 @@ public class Linear implements Iterable<Term> {
         //If there are remaining terms.
         for(Term term : linear.getTerms())
         {
-             newLinear.add(term.getCoefficient(), term.getVariable());
+            if(!termsToremove.contains(term))
+            {
+                newLinear.add(term.getCoefficient(), term.getVariable());
+            }  
         }
         for(Term term : this.getTerms())
         {
-            newLinear.add(term.getCoefficient(), term.getVariable());
+            if(!termsToremove.contains(term))
+            {
+                newLinear.add(term.getCoefficient(), term.getVariable());
+            }
         }
-
     return newLinear;
     }
     

@@ -45,33 +45,33 @@ public class TransportProblemToProblemTest {
         
         assertThat("Problem type is MIN", p.getProblemType(), is(ProblemType.MIN));
         
-        assertThat("Problem have 4 constraints.", p.getConstraintsCount(), is(4));
+        assertThat("Problem have 6 constraints.", p.getConstraintsCount(), is(6));
         assertThat("Problem have 2 variables.", p.getVariablesCount(), is(2));
         
-        assertThat("Function x is 6", fun.getCoefficient("x"), is(6));
-        assertThat("Function y is 10", fun.getCoefficient("y"), is(10));
+        assertThat("Function x is 6", fun.getCoefficient("x"), is(6.0));
+        assertThat("Function y is 10", fun.getCoefficient("y"), is(10.0));
         
         linear = new Linear();
         linear.add(1, "x");
-        constraint = new Constraint(linear, Relationship.LEQ, 1000);
+        constraint = new Constraint(linear, Relationship.LEQ, 1000.0);
         assertThat("Problem has constraint [x <= 1000]", cons, hasItem(constraint));
         
         linear = new Linear();
         linear.add(1, "y");
-        constraint = new Constraint(linear, Relationship.LEQ, 700);
+        constraint = new Constraint(linear, Relationship.LEQ, 700.0);
         assertThat("Problem has constraint [y <= 700]", cons, hasItem(constraint));
         
         linear = new Linear();
         linear.add(1, "x");
         linear.add(1, "y");
-        constraint = new Constraint(linear, Relationship.LEQ, 800);
+        constraint = new Constraint(linear, Relationship.LEQ, 800.0);
         assertThat("Problem has constraint [x + y <= 800]", cons, hasItem(constraint));
         
         linear = new Linear();
         linear.add(1, "x");
         linear.add(1, "y");
-        constraint = new Constraint(linear, Relationship.GEQ, 200);
-        assertThat("Problem has constraint [x + y >= 200]", cons, hasItem(constraint));
+        constraint = new Constraint(linear, Relationship.GEQ, -200.0);
+        assertThat("Problem has constraint [x + y >= -200]", cons, hasItem(constraint));
     }
     
 }
