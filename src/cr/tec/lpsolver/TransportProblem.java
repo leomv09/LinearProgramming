@@ -138,8 +138,8 @@ public class TransportProblem {
      * @param demand The demand quantity.
      */
     public void addConsumer(String consumer, double demand) {
-        this.addConsumer(consumer);
-        this.setDemand(consumer, demand);
+        addConsumer(consumer);
+        setDemand(consumer, demand);
     }
     
     /**
@@ -149,7 +149,7 @@ public class TransportProblem {
      * @param value the value to be asigned to the producer.
      */
     public void setProduction(String producer, double value) {
-        int producerIndex = this.getProducersIndex(producer);
+        int producerIndex = getProducersIndex(producer);
         production[producerIndex] = value;
     }
     
@@ -160,7 +160,7 @@ public class TransportProblem {
      * @param value the value to be asigned to the consumer.
      */
     public void setDemand(String consumer, double value) {
-        int consumerIndex = this.getConsumersIndex(consumer);
+        int consumerIndex = getConsumersIndex(consumer);
         demand[consumerIndex] = value;
     }
     
@@ -173,8 +173,8 @@ public class TransportProblem {
      */
     public void setCost(String producer, String consumer, double value)
     {
-        int producerIndex = this.getProducersIndex(producer);
-        int consumerIndex = this.getConsumersIndex(consumer);
+        int producerIndex = getProducersIndex(producer);
+        int consumerIndex = getConsumersIndex(consumer);
         costTable[producerIndex][consumerIndex] = value;
     }
 
@@ -203,7 +203,7 @@ public class TransportProblem {
      * @return The production quantity or -1 if the producer doesn't have an assigned production.
      */
     public double getProduction(String producer) {
-        int producerIndex = this.getProducersIndex(producer);
+        int producerIndex = getProducersIndex(producer);
         return production[producerIndex];
     }
     
@@ -215,8 +215,8 @@ public class TransportProblem {
     public double getTotalProduction() {
         double currentProduction, totalProduction = 0.0;
         
-        for (String producer : this.producers) {
-            currentProduction = this.getProduction(producer);
+        for (String producer : producers) {
+            currentProduction = getProduction(producer);
             if (currentProduction >= 0) {
                 totalProduction += currentProduction;
             }
@@ -235,8 +235,8 @@ public class TransportProblem {
         Map<String, Double> allProduction = new HashMap<>();
         double currentProduction;
         
-        for (String producer : this.producers) {
-            currentProduction = this.getProduction(producer);
+        for (String producer : producers) {
+            currentProduction = getProduction(producer);
             allProduction.put(producer, currentProduction);
         }
         
@@ -250,7 +250,7 @@ public class TransportProblem {
      * @return The demand quantity or -1 if the consumer doesn't have an assigned demand.
      */
     public double getDemand(String consumer) {
-        int consumerIndex = this.getConsumersIndex(consumer);
+        int consumerIndex = getConsumersIndex(consumer);
         return demand[consumerIndex];
     }
     
@@ -262,8 +262,8 @@ public class TransportProblem {
     public double getTotalDemand() {
         double currentDemand, totalDemand = 0.0;
         
-        for (String consumer : this.consumers) {
-            currentDemand = this.getDemand(consumer);
+        for (String consumer : consumers) {
+            currentDemand = getDemand(consumer);
             if (currentDemand >= 0) {
                 totalDemand += currentDemand;
             }
@@ -282,8 +282,8 @@ public class TransportProblem {
         Map<String, Double> allDemand = new HashMap<>();
         double currentDemand;
         
-        for (String consumer : this.consumers) {
-            currentDemand = this.getDemand(consumer);
+        for (String consumer : consumers) {
+            currentDemand = getDemand(consumer);
             allDemand.put(consumer, currentDemand);
         }
         
@@ -298,8 +298,8 @@ public class TransportProblem {
      * @return The transportation cost.
      */
     public double getCost(String producer, String consumer) {
-        int producerIndex = this.getProducersIndex(producer);
-        int consumerIndex = this.getConsumersIndex(consumer);
+        int producerIndex = getProducersIndex(producer);
+        int consumerIndex = getConsumersIndex(consumer);
         return costTable[producerIndex][consumerIndex];
     }
     
@@ -309,7 +309,7 @@ public class TransportProblem {
      * @return The number of producers.
      */
     public int getProducersCount() {
-        return this.producers.length;
+        return producers.length;
     }
     
     /**
@@ -318,7 +318,7 @@ public class TransportProblem {
      * @return The number of consumers.
      */
     public int getConsumersCount() {
-        return this.consumers.length;
+        return consumers.length;
     }
     
     /**
@@ -329,7 +329,7 @@ public class TransportProblem {
      * @return the index(or space) where the producer is stored. 
      */
     private int getProducersIndex(String producer) {
-        return Arrays.binarySearch(this.producers, producer);
+        return Arrays.binarySearch(producers, producer);
     }
     
     /**
@@ -340,9 +340,8 @@ public class TransportProblem {
      * @return the index(or space) where the consumer is stored.
      */
     private int getConsumersIndex(String consumer) {
-        return Arrays.binarySearch(this.consumers, consumer);
+        return Arrays.binarySearch(consumers, consumer);
     }
-    
     
     /**
      * Obtains the objective function based on the constraints. 
@@ -354,25 +353,27 @@ public class TransportProblem {
      */
     private Linear getObjectiveFunction(Constraint[][] shippingTable)
     {
-        Linear objFunction = new Linear();
-        List<Linear> linearTerms = new ArrayList<>();
-        for(int i = 0; i < this.producers.length; i++)
+        Linear function;
+        List<Linear> terms = new ArrayList<>();
+        
+        for (int i = 0; i < producers.length; i++)
         {
-            for(int j = 0; j < this.consumers.length; j++)
+            for (int j = 0; j < consumers.length; j++)
             {
                 Linear linear = (shippingTable[i][j]).getLinear().numberTimesLinear(costTable[i][j]);
-                linearTerms.add(linear);
+                terms.add(linear);
             }
         }
-        objFunction = linearTerms.get(0);
-        linearTerms.remove(0);
         
-        for(Linear l : linearTerms)
+        function = terms.get(0);
+        terms.remove(0);
+        
+        for (Linear l : terms)
         {
-            objFunction = objFunction.linearAddition(l);
+            function = function.linearAddition(l);
         }
         
-        return objFunction;
+        return function;
     }
     
     
@@ -386,13 +387,15 @@ public class TransportProblem {
     private List<Constraint> getConstraints(Constraint[][] shippingTable)
     {
         List<Constraint> constraints = new ArrayList<>();
-        for(int i = 0; i < this.producers.length; i++)
+        
+        for (int i = 0; i < producers.length; i++)
         {
-            for(int j = 0; j< this.consumers.length; j++)
+            for (int j = 0; j< consumers.length; j++)
             {
                 constraints.add(shippingTable[i][j]);
             }
         }
+        
         return constraints;
     }
     
@@ -404,17 +407,16 @@ public class TransportProblem {
      */
     public Problem toProblem() 
     {
-        
         Constraint[][] shippingTable = new Constraint[producers.length][consumers.length];
         String[] variables = {"x", "y"};
-        for(int i = 0; i <= producers.length; i++)
+        
+        for (int i = 0; i <= producers.length; i++)
         {
-            
-            for(int j = 0; j <= consumers.length; j++)
+            for (int j = 0; j <= consumers.length; j++)
             {
-                if(i == 0)
-                {  
-                    if(j == 0 || j == 1)
+                if (i == 0)
+                {
+                    if (j == 0 || j == 1)
                     {
                         Linear linear = new Linear();
                         linear.add(1, variables[j]);
@@ -433,7 +435,7 @@ public class TransportProblem {
                 }
                 else
                 {
-                    if(j == 0 || j == 1)
+                    if (j == 0 || j == 1)
                     {
                         Constraint currentConstr = shippingTable[0][j];
                         Linear linear = new Linear();
@@ -453,7 +455,6 @@ public class TransportProblem {
                         linear.add(cons1.getLinear().getTerms().get(1).getCoefficient(), cons1.getLinear().getTerms().get(1).getVariable());
                         linear.add(- cons2.getLinear().getTerms().get(0).getCoefficient(), cons2.getLinear().getTerms().get(0).getVariable());
                         linear.add(- cons2.getLinear().getTerms().get(1).getCoefficient(), cons2.getLinear().getTerms().get(1).getVariable());
-                        //Linear needs to be simplified!!
                         Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
                         shippingTable[i][j] = cons;
                     }
@@ -463,7 +464,7 @@ public class TransportProblem {
         
         Problem problem = new Problem();
         problem.setObjetiveFunction(getObjectiveFunction(shippingTable));
-        problem.setConstraints(getConstraints(shippingTable));
+        problem.addConstraints(getConstraints(shippingTable));
         problem.setProblemType(ProblemType.MIN);
         
         return problem;

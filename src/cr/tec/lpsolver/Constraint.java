@@ -1,6 +1,7 @@
 package cr.tec.lpsolver;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The class {@code Constraint} represent a linear constraint.
@@ -90,5 +91,34 @@ public class Constraint {
     public String toString() {
         return linear + " " + relationship + " " + constant;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.linear);
+        hash = 47 * hash + Objects.hashCode(this.relationship);
+        hash = 47 * hash + (int) (Double.doubleToLongBits(this.constant) ^ (Double.doubleToLongBits(this.constant) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Constraint other = (Constraint) obj;
+        if (!Objects.equals(this.linear, other.linear)) {
+            return false;
+        }
+        if (this.relationship != other.relationship) {
+            return false;
+        }
+        return Double.doubleToLongBits(this.constant) == Double.doubleToLongBits(other.constant);
+    }
+    
+    
     
 }

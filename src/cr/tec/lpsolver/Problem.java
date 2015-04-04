@@ -1,6 +1,7 @@
 package cr.tec.lpsolver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -47,17 +48,6 @@ public class Problem {
         this.objetiveFunction = linear;
     }
 
-    /**
-     * Sets all the problem constraints of once.
-     * @param cons the list of constraints.
-     */
-    public void setConstraints(List<Constraint> cons)
-    {
-        for(Constraint con : cons)
-        {
-            this.addConstraint(con);
-        }
-    }
     /**
      * Returns the constraints.
      * 
@@ -136,6 +126,17 @@ public class Problem {
     public void addConstraint(Linear linear, Relationship relationship, Double constant) {
         Constraint constraint = new Constraint(linear, relationship, constant);
         addConstraint(constraint);
+    }
+    
+    /**
+     * Add a collection of constraints.
+     * 
+     * @param constraints The constraints.
+     */
+    public void addConstraints(Collection<Constraint> constraints) {
+        for (Constraint constraint : constraints) {
+            addConstraint(constraint);
+        }
     }
     
     /**
