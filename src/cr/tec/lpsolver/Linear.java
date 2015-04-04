@@ -177,7 +177,10 @@ public class Linear implements Iterable<Term> {
         Term t = getTerm(term.getVariable());
         if (t != null) {
             terms.remove(t);
-            terms.add(new Term(term.getVariable(), term.getCoefficient() + t.getCoefficient()));
+            double coefficient = term.getCoefficient() + t.getCoefficient();
+            if (coefficient != 0) {
+                terms.add(new Term(term.getVariable(), coefficient));
+            }
         }
         else {
             terms.add(term);
