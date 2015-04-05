@@ -21,12 +21,6 @@ public class Term {
      *            
      */
     public Term(String variable, double coefficient) throws IllegalArgumentException {
-        /*if (coefficient == 0) {
-            throw new IllegalArgumentException("Cannot create a term with coefficient zero.");
-        }*/
-        if (variable == null) {
-            throw new IllegalArgumentException("Cannot create a term with no variable.");
-        }
         this.variable = variable;
         this.coefficient = coefficient;
     }

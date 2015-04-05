@@ -172,30 +172,25 @@ public class Linear implements Iterable<Term> {
      * Add a term to the linear expression.
      * 
      * @param term The term.
+     * @return True if the linear expression changes after this call.
      */
-    public void add(Term term) {
+    public boolean add(Term term) {
         Term t = getTerm(term.getVariable());
+        
         if (t != null) {
             terms.remove(t);
             double coefficient = term.getCoefficient() + t.getCoefficient();
             if (coefficient != 0) {
                 terms.add(new Term(term.getVariable(), coefficient));
+                return true;
             }
         }
-        else {
+        else if (term.getCoefficient() != 0 && term.getVariable() != null) {
             terms.add(term);
+            return true;
         }
-    }
-    
-    /**
-     * Adds terms to the linear expression.
-     * 
-     * @param terms The terms to be added.
-     */
-    public void add(Term... terms) {
-        for (Term term : terms) {
-            add(term);
-        }
+
+        return false;
     }
     
     /**
@@ -203,12 +198,27 @@ public class Linear implements Iterable<Term> {
      * 
      * @param variable The variable.
      * @param coefficient The coefficient.
+     * @return True if the linear expression changes after this call.
      */
-    public void add(double coefficient, String variable) {
+    public boolean add(double coefficient, String variable) {
         Term term = new Term(variable, coefficient);
-        add(term);
+        return add(term);
     }
     
+    /**
+     * Adds terms to the linear expression.
+     * 
+     * @param terms The terms to be added.
+     * @return True if the linear expression changes after this call.
+     */
+    public boolean add(Term... terms) {
+        boolean changed = false;
+        for (Term term : terms) {
+            changed |= add(term);
+        }
+        return changed;
+    }
+
     /**
      * Check if the linear expression contains the given variable.
      * 
