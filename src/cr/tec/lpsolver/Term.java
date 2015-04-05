@@ -43,6 +43,11 @@ public class Term {
         return coefficient;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -51,6 +56,11 @@ public class Term {
         return hash;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals()
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -66,6 +76,11 @@ public class Term {
         return Double.doubleToLongBits(this.coefficient) == Double.doubleToLongBits(other.coefficient);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return coefficient + variable;

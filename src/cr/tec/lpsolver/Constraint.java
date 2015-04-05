@@ -112,11 +112,21 @@ public class Constraint {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return linear + " " + relationship + " " + constant;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         int hash = 3;
@@ -126,6 +136,11 @@ public class Constraint {
         return hash;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals()
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

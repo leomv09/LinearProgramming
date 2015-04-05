@@ -128,6 +128,11 @@ public class Result implements Iterable {
         return resultSet.size();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Iterable#iterator()
+     */
     @Override
     public Iterator iterator() {
         return resultSet.iterator();

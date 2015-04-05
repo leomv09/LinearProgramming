@@ -249,16 +249,6 @@ public class Linear implements Iterable<Term> {
     public void clear() {
         terms.clear();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Iterable#iterator()
-     */
-    @Override
-    public Iterator<Term> iterator() {
-        return terms.iterator();
-    }
     
     /**
      * Evaluates the equation with a given values.
@@ -284,6 +274,21 @@ public class Linear implements Iterable<Term> {
         return result;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<Term> iterator() {
+        return terms.iterator();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -296,6 +301,11 @@ public class Linear implements Iterable<Term> {
         return sb.toString();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -303,6 +313,11 @@ public class Linear implements Iterable<Term> {
         return hash;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals()
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -314,6 +329,5 @@ public class Linear implements Iterable<Term> {
         final Linear other = (Linear) obj;
         return Objects.equals(this.terms, other.terms);
     }
-    
     
 }
