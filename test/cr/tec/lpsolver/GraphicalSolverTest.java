@@ -83,7 +83,7 @@ public class GraphicalSolverTest {
         
         Result result = solver.solve(problem);
         
-        assertThat("Problem have 2 solutions", result.size(), is(2));
+        assertThat("Problem has 2 solutions", result.size(), is(2));
         
         assertThat("Optimum value is 42", result.getOptimumValue(), is(42.0));
         
@@ -158,7 +158,7 @@ public class GraphicalSolverTest {
         
         Result result = solver.solve(problem);
         
-        assertThat("Problem have no solutions", result.size(), is(0));
+        assertThat("Problem has no solutions", result.size(), is(0));
         
         assertTrue("Optimum value is Double.NaN", Double.isNaN(result.getOptimumValue()));
         

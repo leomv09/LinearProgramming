@@ -1,7 +1,9 @@
 package cr.tec.lpsolver;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import math.geom2d.Point2D;
 
@@ -39,15 +41,44 @@ public class GraphicalSolver implements Solver {
         
         if (region != null && !region.isEmpty())
         {
-            Point2D optimum = getOptimun(region.getVertex(), problem.getProblemType(), problem.getObjetiveFunction());
-            Map<String, Double> values = new HashMap();
-            values.put("x", optimum.getX());
-            values.put("y", optimum.getY());
-        
-            Result res = new Result(region, problem.getObjetiveFunction().evaluate(values));
-            res.addVariable("x",  optimum.getX());
-            res.addVariable("y",  optimum.getY());
-            return res;
+            if(!region.isBounded())
+            {
+                throw new Exception("Region not bounded.");
+            }
+            else
+            {
+                Map<String, Double> values = new HashMap();
+                Result res = null;
+                List<Point2D> optimumValues = getOptimun(region.getVertex(), problem.getProblemType(), problem.getObjetiveFunction());
+                if(optimumValues.size() > 1)//Multiple solutions.
+                {
+
+                    values.put("x", optimumValues.get(0).getX());
+                    values.put("y", optimumValues.get(0).getY());
+                    res = new Result(region, problem.getObjetiveFunction().evaluate(values));
+                    List<Map<String, Double>> resultSet = new ArrayList<>();
+                    for(Point2D point : optimumValues)
+                    {
+                        Map<String, Double> solution = new HashMap();
+                        solution.put("x", point.getX());
+                        solution.put("y", point.getY());
+                        resultSet.add(solution);   
+                    }
+
+                    res.setResults(resultSet);
+                    return res;   
+                }
+                else
+                {
+                    values.put("x", optimumValues.get(0).getX());
+                    values.put("y", optimumValues.get(0).getY());
+                    res = new Result(region, problem.getObjetiveFunction().evaluate(values));
+                    res.addVariable("x", optimumValues.get(0).getX());
+                    res.addVariable("y", optimumValues.get(0).getY());
+                    return res;
+                }
+            }
+            
         }
         else
         {
@@ -63,13 +94,14 @@ public class GraphicalSolver implements Solver {
      * @param type The problem type (min or max).
      * @param objectiveFunction The Linear objective function of the problem.
      * 
-     * @return The optimum Point2D (point) of the feasible region.
+     * @return a list containing the optimum points of the feasible region.
      */
-    private Point2D getOptimun(Collection<Point2D> vertex, ProblemType type, Linear objectiveFunction)
+    private List<Point2D> getOptimun(Collection<Point2D> vertex, ProblemType type, Linear objectiveFunction)
     {
         Point2D currentPoint = null;
         double currentValue;
-        
+        List<Point2D> optimumValues = new ArrayList<>();
+        List<Point2D> finalValues = new ArrayList<>();
         if (type == ProblemType.MAX)
         {
             currentValue = 0.0;
@@ -78,13 +110,26 @@ public class GraphicalSolver implements Solver {
                 Map<String, Double> values = new HashMap();
                 values.put("x", point.getX());
                 values.put("y", point.getY());
-                if (currentValue < objectiveFunction.evaluate(values))
+                if (currentValue <= objectiveFunction.evaluate(values))
                 {
-                    currentPoint = point;
+                    optimumValues.add(point);
                     currentValue = objectiveFunction.evaluate(values);
                 }
             }
-            return currentPoint;
+            
+            for(int i = 0; i < optimumValues.size(); i++)//Check if there are more than one optimum solution.
+            {
+                currentPoint = optimumValues.get(i);
+                Map<String, Double> values = new HashMap();
+                values.put("x", currentPoint.getX());
+                values.put("y", currentPoint.getY());
+                if(currentValue == objectiveFunction.evaluate(values))
+                {
+                    finalValues.add(currentPoint);
+                }
+            }
+            
+            return finalValues;
         }
         else
         {
@@ -94,13 +139,25 @@ public class GraphicalSolver implements Solver {
                 Map<String, Double> values = new HashMap();
                 values.put("x", point.getX());
                 values.put("y", point.getY());
-                if (currentValue > objectiveFunction.evaluate(values))
+                if (currentValue >= objectiveFunction.evaluate(values))
                 {
-                    currentPoint = point;
+                    optimumValues.add(point);
                     currentValue = objectiveFunction.evaluate(values);
                 }
+                
             }
-            return currentPoint;
+            for(int i = 0; i < optimumValues.size(); i++)//Check if there are more than one optimum solution.
+            {
+                Point2D point = optimumValues.get(i);
+                Map<String, Double> values = new HashMap();
+                values.put("x", point.getX());
+                values.put("y", point.getY());
+                if(currentValue == objectiveFunction.evaluate(values))
+                {
+                    finalValues.add(currentPoint);
+                }
+            }
+            return finalValues;
         }  
     }
     
