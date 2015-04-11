@@ -25,35 +25,43 @@ public class GraphicalSolverTest {
         problem.setProblemType(ProblemType.MAX);
         
         linear = new Linear();
-        linear.add(2, "x");
-        linear.add(1, "y");
+        linear.add(5, "x");
+        linear.add(4, "y");
         problem.setObjetiveFunction(linear);
         
         linear = new Linear();
-        linear.add(4, "x");
-        linear.add(3, "y");
-        constraint = new Constraint(linear, Relationship.LEQ, 12);
+        linear.add(6, "x");
+        linear.add(4, "y");
+        constraint = new Constraint(linear, Relationship.LEQ, 24);
         problem.addConstraint(constraint);
         
         linear = new Linear();
-        linear.add(4, "x");
+        linear.add(1, "x");
+        linear.add(2, "y");
+        constraint = new Constraint(linear, Relationship.LEQ, 6);
+        problem.addConstraint(constraint);
+        
+        linear = new Linear();
+        linear.add(-1, "x");
         linear.add(1, "y");
-        constraint = new Constraint(linear, Relationship.LEQ, 8);
+        constraint = new Constraint(linear, Relationship.LEQ, 1);
         problem.addConstraint(constraint);
         
         linear = new Linear();
-        linear.add(4, "x");
-        linear.add(-1, "y");
-        constraint = new Constraint(linear, Relationship.LEQ, 8);
+        linear.add(1, "y");
+        constraint = new Constraint(linear, Relationship.LEQ, 2);
         problem.addConstraint(constraint);
         
         Result result = solver.solve(problem);
         
         assertThat("Problem have 1 solution", result.size(), is(1));
         
-        assertThat("Optimum value is 5", result.getOptimumValue(), is(5.0));
+        assertThat("Optimum value is 21", result.getOptimumValue(), is(21.0));
         
-        assertThat(result.getResults(), allOf(hasEntry("x", 1.5), hasEntry("y", 2.0)));
+        assertThat(result.getResults(), allOf(
+            hasEntry(equalToIgnoringCase("x"), closeTo(3.0, 0.001)),
+            hasEntry(equalToIgnoringCase("y"), closeTo(1.5, 0.001))
+        ));
     }
 
     @Test
@@ -86,15 +94,30 @@ public class GraphicalSolverTest {
         assertThat("Problem has 2 solutions", result.size(), is(2));
         
         assertThat("Optimum value is 42", result.getOptimumValue(), is(42.0));
+
+        System.out.println(result.getResults(0));
+        System.out.println(result.getResults(1));
         
         assertThat(result.getResults(0), anyOf(
-            allOf(hasEntry("x", 0), hasEntry("y", 3)),
-            allOf(hasEntry("x", 7/3), hasEntry("y", 7/3))
+            allOf(
+                hasEntry(equalTo("x"), closeTo(0, 0.001)),
+                hasEntry(equalTo("y"), closeTo(3, 0.001))
+            ),
+            allOf(
+                hasEntry(equalTo("x"), closeTo(7/3, 0.001)),
+                hasEntry(equalTo("y"), closeTo(7/3, 0.001))
+            )
         ));
         
         assertThat(result.getResults(1), anyOf(
-            allOf(hasEntry("x", 0), hasEntry("y", 3)),
-            allOf(hasEntry("x", 7/3), hasEntry("y", 7/3))
+            allOf(
+                hasEntry(equalTo("x"), closeTo(0, 0.001)),
+                hasEntry(equalTo("y"), closeTo(3, 0.001))
+            ),
+            allOf(
+                hasEntry(equalTo("x"), closeTo(7/3, 0.001)),
+                hasEntry(equalTo("y"), closeTo(7/3, 0.001))
+            )
         ));
     }
     
@@ -128,7 +151,7 @@ public class GraphicalSolverTest {
         constraint = new Constraint(linear, Relationship.LEQ, 10);
         problem.addConstraint(constraint);
         
-        Result result = solver.solve(problem);
+        solver.solve(problem);
     }
     
     @Test

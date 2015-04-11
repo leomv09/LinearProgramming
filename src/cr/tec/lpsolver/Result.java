@@ -16,7 +16,7 @@ public class Result implements Iterable {
     /**
      * A map with the variable and its corresponding result.
      */
-    private List<Map<String, Double>> resultSet;
+    private final List<Map<String, Double>> resultSet;
     
     /**
      * Feasible region of the problem.
@@ -128,16 +128,6 @@ public class Result implements Iterable {
         return resultSet.size();
     }
     
-    /**
-     * Sets the list containing the multiple solutions(in case the problem has multiple solutions).
-     * 
-     * @param results the list containing the multiple solutions
-     */
-    public void setResults(List<Map<String, Double>> results)
-    {
-        this.resultSet = results;
-    }
-
     /*
      * (non-Javadoc)
      * 

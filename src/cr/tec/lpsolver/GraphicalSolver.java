@@ -22,8 +22,8 @@ public class GraphicalSolver implements Solver {
      * feasible solution.
      */
     @Override
-    public Result solve(Problem problem) throws Exception {
-        
+    public Result solve(Problem problem) throws Exception
+    {
         FeasibleRegion2DFactory factory = new FeasibleRegion2DFactory(problem);
         FeasibleRegion2D region = null;
         
@@ -41,51 +41,35 @@ public class GraphicalSolver implements Solver {
         
         if (region != null && !region.isEmpty())
         {
-            if(!region.isBounded())
-            {
-                throw new Exception("Region not bounded.");
-            }
-            else
-            {
-                Map<String, Double> values = new HashMap();
-                Result res = null;
-                List<Point2D> optimumValues = getOptimun(region.getVertex(), problem.getProblemType(), problem.getObjetiveFunction());
-                if(optimumValues.size() > 1)//Multiple solutions.
-                {
-
-                    values.put("x", optimumValues.get(0).getX());
-                    values.put("y", optimumValues.get(0).getY());
-                    res = new Result(region, problem.getObjetiveFunction().evaluate(values));
-                    List<Map<String, Double>> resultSet = new ArrayList<>();
-                    for(Point2D point : optimumValues)
-                    {
-                        Map<String, Double> solution = new HashMap();
-                        solution.put("x", point.getX());
-                        solution.put("y", point.getY());
-                        resultSet.add(solution);   
-                    }
-
-                    res.setResults(resultSet);
-                    return res;   
-                }
-                else
-                {
-                    values.put("x", optimumValues.get(0).getX());
-                    values.put("y", optimumValues.get(0).getY());
-                    res = new Result(region, problem.getObjetiveFunction().evaluate(values));
-                    res.addVariable("x", optimumValues.get(0).getX());
-                    res.addVariable("y", optimumValues.get(0).getY());
-                    return res;
-                }
+            if (!region.isBounded() && problem.getProblemType() == ProblemType.MAX) {
+                return new Result(region, Double.NaN);
             }
             
+            List<Point2D> optimum = getOptimun(
+                region.getVertex(),
+                problem.getProblemType(),
+                problem.getObjetiveFunction()
+            );
+
+            Map<String, Double> values = new HashMap<>();
+            values.put("x", optimum.get(0).getX());
+            values.put("y", optimum.get(0).getY());
+
+            Result res = new Result(region, problem.getObjetiveFunction().evaluate(values));
+
+            for (int i = 0; i < optimum.size(); i++) {
+                res.createSet();
+                res.addVariable("x", optimum.get(i).getX(), i);
+                res.addVariable("y", optimum.get(i).getY(), i);
+            }
+
+            return res;
         }
         else
         {
             throw new Exception("Empty region. No solutions.");
         }
     }
-    
     
     /**
      * Obtains the optimum point (min or max) of a feasible region.
@@ -158,7 +142,7 @@ public class GraphicalSolver implements Solver {
                 }
             }
             return finalValues;
-        }  
+        }
     }
     
 }
