@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * The {@code Result} of a {@link Problem}.
@@ -137,4 +139,22 @@ public class Result implements Iterable {
     public Iterator iterator() {
         return resultSet.iterator();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("RESULT").append("\n");
+        sb.append("Z = ").append(optimumValue).append("\n");
+        
+        for (Map<String, Double> map : resultSet) {
+            for (Entry<String, Double> entry : map.entrySet()) {
+                sb.append(entry.getKey()).append("=").append(entry.getValue()).append(" ");
+            }
+            sb.append("\n");
+        }
+        
+        sb.append(feasibleRegion).append("\n");
+        return sb.toString();
+    }
+    
 }

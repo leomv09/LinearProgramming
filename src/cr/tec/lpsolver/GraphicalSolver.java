@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import math.geom2d.Point2D;
 
 /**
@@ -45,7 +46,7 @@ public class GraphicalSolver implements Solver {
                 return new Result(region, Double.NaN);
             }
             
-            List<Point2D> optimum = getOptimun(
+            List<Point2D> optimum = getOptimum(
                 region.getVertex(),
                 problem.getProblemType(),
                 problem.getObjetiveFunction()
@@ -71,78 +72,42 @@ public class GraphicalSolver implements Solver {
         }
     }
     
-    /**
-     * Obtains the optimum point (min or max) of a feasible region.
-     * 
-     * @param vertex A list of vertex from the feasible region.
-     * @param type The problem type (min or max).
-     * @param objectiveFunction The Linear objective function of the problem.
-     * 
-     * @return a list containing the optimum points of the feasible region.
-     */
-    private List<Point2D> getOptimun(Collection<Point2D> vertex, ProblemType type, Linear objectiveFunction)
+    private double evaluatePoint(Point2D point, Linear function) {
+        Map<String, Double> values = new HashMap();
+        values.put("x", point.getX());
+        values.put("y", point.getY());
+        return function.evaluate(values);
+    }
+
+    private List<Point2D> getOptimum(Collection<Point2D> vertex, ProblemType type, Linear objectiveFunction)
     {
-        Point2D currentPoint = null;
-        double currentValue;
-        List<Point2D> optimumValues = new ArrayList<>();
-        List<Point2D> finalValues = new ArrayList<>();
-        if (type == ProblemType.MAX)
-        {
-            currentValue = 0.0;
-            for (Point2D point : vertex)
-            {
-                Map<String, Double> values = new HashMap();
-                values.put("x", point.getX());
-                values.put("y", point.getY());
-                if (currentValue <= objectiveFunction.evaluate(values))
-                {
-                    optimumValues.add(point);
-                    currentValue = objectiveFunction.evaluate(values);
-                }
-            }
+        List<Point2D> points = new ArrayList<>();
+        Double optimum = null;
+        Double value;
+        
+        for (Point2D point : vertex) {
+            value = evaluatePoint(point, objectiveFunction);
             
-            for(int i = 0; i < optimumValues.size(); i++)//Check if there are more than one optimum solution.
-            {
-                currentPoint = optimumValues.get(i);
-                Map<String, Double> values = new HashMap();
-                values.put("x", currentPoint.getX());
-                values.put("y", currentPoint.getY());
-                if(currentValue == objectiveFunction.evaluate(values))
-                {
-                    finalValues.add(currentPoint);
-                }
+            if (optimum == null) {
+                optimum = value;
+                points.add(point);
             }
-            
-            return finalValues;
+            else if (Objects.equals(value, optimum)) {
+                points.add(point);
+            }
+            else if (type == ProblemType.MIN && value < optimum) {
+                optimum = value;
+                points.clear();
+                points.add(point);
+            }
+            else if (type == ProblemType.MAX && value > optimum) {
+                optimum = value;
+                points.clear();
+                points.add(point);
+            }
         }
-        else
-        {
-            currentValue = Double.POSITIVE_INFINITY;
-            for (Point2D point : vertex)
-            {
-                Map<String, Double> values = new HashMap();
-                values.put("x", point.getX());
-                values.put("y", point.getY());
-                if (currentValue >= objectiveFunction.evaluate(values))
-                {
-                    optimumValues.add(point);
-                    currentValue = objectiveFunction.evaluate(values);
-                }
-                
-            }
-            for(int i = 0; i < optimumValues.size(); i++)//Check if there are more than one optimum solution.
-            {
-                Point2D point = optimumValues.get(i);
-                Map<String, Double> values = new HashMap();
-                values.put("x", point.getX());
-                values.put("y", point.getY());
-                if(currentValue == objectiveFunction.evaluate(values))
-                {
-                    finalValues.add(currentPoint);
-                }
-            }
-            return finalValues;
-        }
+        
+        return points;
     }
     
 }
