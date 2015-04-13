@@ -140,6 +140,11 @@ public class Result implements Iterable {
         return resultSet.iterator();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

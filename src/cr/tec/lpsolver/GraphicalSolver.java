@@ -79,31 +79,30 @@ public class GraphicalSolver implements Solver {
         return function.evaluate(values);
     }
 
-    private List<Point2D> getOptimum(Collection<Point2D> vertex, ProblemType type, Linear objectiveFunction)
+    private List<Point2D> getOptimum(List<Point2D> vertex, ProblemType type, Linear objectiveFunction)
     {
         List<Point2D> points = new ArrayList<>();
-        Double optimum = null;
-        Double value;
         
-        for (Point2D point : vertex) {
-            value = evaluatePoint(point, objectiveFunction);
+        if (!vertex.isEmpty()) {
+            double optimum = evaluatePoint(vertex.get(0), objectiveFunction);
+            points.add(vertex.get(0));
             
-            if (optimum == null) {
-                optimum = value;
-                points.add(point);
-            }
-            else if (Objects.equals(value, optimum)) {
-                points.add(point);
-            }
-            else if (type == ProblemType.MIN && value < optimum) {
-                optimum = value;
-                points.clear();
-                points.add(point);
-            }
-            else if (type == ProblemType.MAX && value > optimum) {
-                optimum = value;
-                points.clear();
-                points.add(point);
+            double value;
+            Point2D point;
+
+            for (int i = 1; i < vertex.size(); i++) {
+                point = vertex.get(i);
+                value = evaluatePoint(point, objectiveFunction);
+
+                if (value == optimum) {
+                    points.add(point);
+                }
+                else if ((type == ProblemType.MIN && value < optimum) || 
+                         (type == ProblemType.MAX && value > optimum)) {
+                    optimum = value;
+                    points.clear();
+                    points.add(point);
+                }
             }
         }
         
