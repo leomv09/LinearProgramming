@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * The {@code Result} of a {@link Problem}.
@@ -18,7 +17,7 @@ public class Result implements Iterable {
     /**
      * A map with the variable and its corresponding result.
      */
-    private final List<Map<String, Double>> resultSet;
+    private List<Map<String, Double>> resultSet;
     
     /**
      * Feasible region of the problem.
@@ -110,6 +109,11 @@ public class Result implements Iterable {
      */
     public Map<String, Double> getResults(int index) {
         return resultSet.get(index);
+    }
+    
+    public void setResults(List<Map<String, Double>> ResultSet)
+    {
+        this.resultSet = ResultSet;
     }
     
     /**

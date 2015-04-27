@@ -7,7 +7,9 @@ package cr.tec.lpsolver;
  */
 public enum Relationship {
     LEQ,
-    GEQ;
+    GEQ,
+    EQ;
+    
     
     /*
      * (non-Javadoc)
@@ -21,6 +23,8 @@ public enum Relationship {
                 return "<=";
             case GEQ:
                 return ">=";
+            case EQ: 
+                return "=";
             default:
                 return "";
         }

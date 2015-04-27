@@ -16,7 +16,7 @@ public class SimplexSolverTest {
         solver = new SimplexSolver();
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testMax() throws Exception {
         Problem problem = new Problem();
         Linear linear;
@@ -47,6 +47,7 @@ public class SimplexSolverTest {
         problem.addConstraint(linear, Relationship.LEQ, 100.0);
 
         Result result = solver.solve(problem);
+        assertThat(result.getOptimumValue(), is(1000.0));
     }
     
 }
