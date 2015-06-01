@@ -1,5 +1,6 @@
 package cr.tec.lpsolver;
 
+import cr.tec.lpsolver.transport.TransportProblem;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 

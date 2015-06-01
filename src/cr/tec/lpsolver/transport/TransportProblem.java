@@ -1,5 +1,11 @@
-package cr.tec.lpsolver;
+package cr.tec.lpsolver.transport;
 
+import cr.tec.lpsolver.Constraint;
+import cr.tec.lpsolver.Linear;
+import cr.tec.lpsolver.Problem;
+import cr.tec.lpsolver.ProblemType;
+import cr.tec.lpsolver.Relationship;
+import cr.tec.lpsolver.Term;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -319,6 +325,15 @@ public class TransportProblem {
      */
     public int getConsumersCount() {
         return consumers.length;
+    }
+    
+    /**
+     * Get the cost table.
+     * 
+     * @return The cost table. 
+     */
+    public double[][] getCostTable() {
+        return costTable;
     }
     
     /**
