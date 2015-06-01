@@ -6,6 +6,6 @@ package cr.tec.lpsolver.transport;
  */
 public interface TransportSolver {
     
-    public abstract TransportResult solve(TransportProblem problem);
+    public abstract TransportResult solve(TransportProblem problem) throws Exception;
     
 }

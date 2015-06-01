@@ -203,6 +203,15 @@ public class TransportProblem {
     }
     
     /**
+     * Get the production array.
+     * 
+     * @return The production array.
+     */
+    public double[] getProduction() {
+        return production;
+    }
+    
+    /**
      * Gets the production quantity related to a specific producer.
      * 
      * @param producer The producer name.
@@ -247,6 +256,15 @@ public class TransportProblem {
         }
         
         return allProduction;
+    }
+    
+    /**
+     * Get the demand array.
+     * 
+     * @return The demand array. 
+     */
+    public double[] getDemand() {
+        return demand;
     }
     
     /**
