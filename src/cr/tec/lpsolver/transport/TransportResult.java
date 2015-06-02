@@ -1,6 +1,7 @@
 package cr.tec.lpsolver.transport;
 
 import java.util.Arrays;
+import static java.util.Arrays.stream;
 
 /**
  *
@@ -119,6 +120,14 @@ public class TransportResult {
      */
     private int getConsumersIndex(String consumer) {
         return Arrays.binarySearch(consumers, consumer);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        stream(assignments).forEach(row -> sb.append(Arrays.toString(row)).append("\n"));
+        sb.append("\n").append("Total: ").append(getTotalCost());
+        return sb.toString();
     }
     
 }

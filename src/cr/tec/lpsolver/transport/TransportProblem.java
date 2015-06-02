@@ -8,6 +8,7 @@ import cr.tec.lpsolver.Relationship;
 import cr.tec.lpsolver.Term;
 import java.util.ArrayList;
 import java.util.Arrays;
+import static java.util.Arrays.stream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -567,6 +568,22 @@ public class TransportProblem {
         problem.setProblemType(ProblemType.MIN);
         
         return problem;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Producers ");
+        sb.append(Arrays.toString(producers)).append("\n");
+        sb.append("Consumers ");
+        sb.append(Arrays.toString(consumers)).append("\n");
+        sb.append("Production ");
+        sb.append(Arrays.toString(production)).append("\n");
+        sb.append("Demand ");
+        sb.append(Arrays.toString(demand)).append("\n");
+        sb.append("Cost Table").append("\n");
+        stream(costTable).forEach(row -> sb.append(Arrays.toString(row)).append("\n"));
+        return sb.toString();
     }
 
 }
