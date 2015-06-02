@@ -55,6 +55,21 @@ public class TransportProblem {
     }
     
     /**
+     * Constructs a {@code TransportProblem}.
+     * 
+     * @param production The production.
+     * @param demand The demand.
+     * @param cost The cost table.
+     */
+    public TransportProblem(double[] production, double[] demand, double[][] cost) {
+        this.producers = createNames("P", cost.length);
+        this.consumers = createNames("C", cost[0].length);
+        this.production = production;
+        this.demand = demand;
+        this.costTable = cost;
+    }
+    
+    /**
      * Add a producer.
      * 
      * @param producer The producer name.
@@ -473,6 +488,15 @@ public class TransportProblem {
         return constraints;
     }
     
+    private String[] createNames(String start, int count) {
+        String[] names = new String[count];
+        
+        for (int i = 0; i < count; i++) {
+            names[i] = start + (i+1);
+        }
+        
+        return names;
+    }
     
     /**
      * Converts a transport problem to an object Problem.
