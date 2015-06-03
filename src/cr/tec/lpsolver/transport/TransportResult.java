@@ -38,23 +38,6 @@ public class TransportResult {
     }
     
     /**
-     * Get the total cost assigned.
-     * 
-     * @return The total cost assigned.
-     */
-    public double getTotalCost() {
-        double total = 0;
-        
-        for (double[] row : assignments) {
-            for (int j = 0; j < row.length; j++) {
-                total += row[j];
-            }
-        }
-        
-        return total;
-    }
-    
-    /**
      * Get the cost assigned from a producer to a consumer.
      * 
      * @param producer The producer.
@@ -126,7 +109,6 @@ public class TransportResult {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         stream(assignments).forEach(row -> sb.append(Arrays.toString(row)).append("\n"));
-        sb.append("\n").append("Total: ").append(getTotalCost());
         return sb.toString();
     }
     
