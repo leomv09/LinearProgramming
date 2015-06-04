@@ -1,14 +1,13 @@
 package cr.tec.lpsolver.transport;
 
-/**
- *
- * @author José Andrés García Sáenz <jags9415@gmail.com>
- */
 public class NorthWestCornerSolver implements TransportSolver {
 
     @Override
     public TransportResult solve(TransportProblem problem) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        NorthWestCornerAlgorithm cornerAlgorithm = new NorthWestCornerAlgorithm(problem.getCostTable(), problem.getProduction(), problem.getDemand());
+        
+        double[][] shippingTable = cornerAlgorithm.execute();
+        return new TransportResult(problem.getProducers(), problem.getConsumers(), shippingTable);
     }
     
 }
