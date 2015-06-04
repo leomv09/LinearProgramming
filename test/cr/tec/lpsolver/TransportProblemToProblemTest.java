@@ -1,5 +1,6 @@
 package cr.tec.lpsolver;
 
+import cr.tec.lpsolver.transport.DefaultTransportAlgorithm;
 import cr.tec.lpsolver.transport.TransportProblem;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -15,6 +16,7 @@ import org.junit.Test;
 public class TransportProblemToProblemTest {
     
     private TransportProblem problem;
+    private DefaultTransportAlgorithm problem2;
     
     @Before
     public void setUp() {
@@ -38,7 +40,8 @@ public class TransportProblemToProblemTest {
         problem.setCost("Fab 2", "B", 2);
         problem.setCost("Fab 2", "C", 6);
         
-        Problem p = problem.toProblem();
+        problem2 = new DefaultTransportAlgorithm(problem.getCostTable(), problem.getDemand(), problem.getProduction());
+        Problem p = problem2.toProblem();
         Linear fun = p.getObjetiveFunction();
         List<Constraint> cons = p.getConstraints();
         Linear linear;

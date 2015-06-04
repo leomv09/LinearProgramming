@@ -1,14 +1,16 @@
 package cr.tec.lpsolver.transport;
 
-/**
- *
- * @author José Andrés García Sáenz <jags9415@gmail.com>
- */
+
 public class DefaultTransportSolver implements TransportSolver {
 
+    
     @Override
-    public TransportResult solve(TransportProblem problem) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public TransportResult solve(TransportProblem problem) throws Exception 
+    {
+        DefaultTransportAlgorithm algorithm = new DefaultTransportAlgorithm(problem.getCostTable(), problem.getDemand(), problem.getProduction());
+        
+         double[][] shippingTable = algorithm.execute();
+        return new TransportResult(problem.getProducers(), problem.getConsumers(), shippingTable);
     }
     
 }
