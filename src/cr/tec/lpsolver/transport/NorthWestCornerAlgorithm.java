@@ -1,20 +1,36 @@
 package cr.tec.lpsolver.transport;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import static java.util.Arrays.stream;
 
+/**
+ *
+ * 
+ * @author Leo
+ */
 public class NorthWestCornerAlgorithm {
     
-    private final int rows;
-    private final int columns;
-    private final double[][] costsTable;
+    private final int rows; // The rows quantity.
+    private final int columns; // The columns quantity.
+    private final double[][] costsTable; // The cost matrix.
     private final double[][] shippingTable; /* The table that stores the quantity to send to each consumer. */
     private final double[] supply; /* Production quantity */
     private final double[] demand; /* Consumer's demand. */
     private final boolean[] rowDone; /* Array that indicates which row is eliminated */
     private final boolean[] colDone; /* Array that indicates which column is eliminated */
+    private File reportFile;
     
     
-    
+    /**
+     * Constructor.
+     * 
+     * @param CostsTable The problem's cost table.
+     * @param Supply The supply information.
+     * @param Demand The demand information.
+     */
     public NorthWestCornerAlgorithm(double[][] CostsTable, double[] Supply, double[] Demand)
     {
         this.costsTable = CostsTable;
@@ -24,7 +40,8 @@ public class NorthWestCornerAlgorithm {
         this.rows = supply.length;
         this.shippingTable = new double[rows][columns];
         this.rowDone = new boolean[rows];
-        this.colDone = new boolean[columns]; 
+        this.colDone = new boolean[columns];
+        reportFile = new File("northWestCorner.txt");
     }
     
     /**
@@ -33,7 +50,7 @@ public class NorthWestCornerAlgorithm {
      * @return The resultant shipment matrix.
      * @throws Exception If a cell is null.
      */
-    double[][] execute() throws Exception
+    public double[][] execute() throws Exception
     {
         double supplyLeft = stream(supply).sum();
         
@@ -61,8 +78,9 @@ public class NorthWestCornerAlgorithm {
             }
             shippingTable[r][c] = minQuantity;
             supplyLeft -= minQuantity;
+            printTable();
         }
-        
+        printShippingTable();
         return this.shippingTable;
     }
     
@@ -125,6 +143,68 @@ public class NorthWestCornerAlgorithm {
     }
     
     
+    public void printTable() throws FileNotFoundException, IOException
+    {
+        System.out.println("----- Costs Table -----");
+        FileWriter out = new FileWriter(reportFile,true);
+        out.write("\n");
+        out.write("----- Costs Table -----\n");
+        for(int i = 0; i < rows; i++)
+        {
+            String row = "[";
+            if(rowDone[i])
+            {
+                for(int j = 0; j < columns; j++)
+                {
+                    row += " X ";
+                }
+                row += "]";
+                System.out.println(row);
+                out.write(row + "\n");
+            }
+            else
+            {
+                for(int j = 0; j <columns; j++)
+                {
+                    if(colDone[j])
+                    {
+                        row += " X ";
+                    }
+                    else
+                    {
+                        row += " "+costsTable[i][j] + " ";
+                    }
+                }
+                row += "]";
+                System.out.println(row);
+                out.write(row + "\n");
+
+            }
+        }
+        out.write("\n");
+        out.close();
+    }
     
+    private void printShippingTable() throws FileNotFoundException, IOException
+    {
+        System.out.println("----- Shipping Table -----");
+        FileWriter out = new FileWriter(reportFile,true);
+        out.write("\n");
+        out.write("----- Shipping Table -----\n");
+        for(int i = 0; i < rows; i++)
+        {
+            String row = "[";
+            for(int j = 0; j < columns; j++)
+            {
+                row += " " + shippingTable[i][j] + " ";
+            }
+            row += "]";
+            System.out.println(row + "\n");
+            out.write(row + "\n");
+        }
+        out.close();
+    }
+    
+            
     
 }
