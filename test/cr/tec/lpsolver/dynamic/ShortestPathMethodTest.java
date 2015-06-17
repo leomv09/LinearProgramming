@@ -85,7 +85,7 @@ public class ShortestPathMethodTest {
     public void solve()
     {
         assertThat("Optimum cost is: ", graph.solveGraph(), is(21.0));
-        assertThat("Optimum paths is: ", graph.getRoutes(2, node7).size(), is(1));
-        assertThat("Best route is: ", graph.getRoutes(2, node7).get(0), is("1->4->5->7"));
+        assertThat("Optimum paths is: ", graph.getRoutes().size(), is(1));
+        assertThat("Best route is: ", graph.getRoutes().get(0), is("1->4->5->7"));
     }
 }

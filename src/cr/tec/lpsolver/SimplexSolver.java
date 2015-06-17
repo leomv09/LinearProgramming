@@ -14,6 +14,8 @@ public class SimplexSolver implements Solver {
 
     private Object[][] simplexTable;
     private List<String> slackVariables; /*List containig the slack variables*/
+    private int rows;
+    private int cols;
     
     public SimplexSolver()
     {
@@ -62,7 +64,6 @@ public class SimplexSolver implements Solver {
                     simplexTable[i][j] = term.getCoefficient();
                     j++;
                 }
-                int k = 0;
                 //Create the identity matrix.
                 while( j <= simplexTable[i].length-2)
                 {
@@ -214,14 +215,14 @@ public class SimplexSolver implements Solver {
     }
     
     /**
-     * Updates the whole simplex table.
+     * Updates the simplex table.
      * 
      * @param pivotColumn The pivot value for the current iteration
      * @param newRowIndex The privot row index.
      */
     private void updateSimplexTable(int pivotColumn, int newRowIndex)
     {
-        System.out.println("Row changed: "+ newRowIndex);
+
         for(int i = 0; i <= slackVariables.size(); i++)
         {
             if(i != newRowIndex)
@@ -230,7 +231,6 @@ public class SimplexSolver implements Solver {
             }
             
         }
-        System.out.println("Table updated: "+Arrays.deepToString(simplexTable));
     }
     
     
@@ -278,9 +278,8 @@ public class SimplexSolver implements Solver {
       * @param problem Problem object.
       * @return A map (Variable, solution) of solution points.
       */
-    private Map<String, Double> getOptimumPoints(Problem problem)
+    private void getOptimumPoints(Problem problem, Result res)
     {
-        Map<String, Double> points = new HashMap<>();
         for(String variable : problem.getVariables())
         {
             double result = getSolutionValueOf(variable);
@@ -288,10 +287,13 @@ public class SimplexSolver implements Solver {
             {
                 result = 0;
             }
-            System.out.println("Variabe: "+variable +" Solution: "+result);
-            points.put(variable, result);
+            res.addVariable(variable, result);
         }
-        return points;
+    }
+    
+    private void printTable()
+    {
+        
     }
     
     /**
@@ -308,10 +310,10 @@ public class SimplexSolver implements Solver {
             problem.setObjetiveFunction(problem.getObjetiveFunction().numberTimesLinear(-1));
         }
         createSlackVariables(problem.getConstraints());
-        int lastColumn = (problem.getVariables().size() + slackVariables.size()) + 2;
-        simplexTable = new Object[slackVariables.size()+1][lastColumn];
+        cols = (problem.getVariables().size() + slackVariables.size()) + 2;
+        rows = slackVariables.size()+1;
+        simplexTable = new Object[rows][cols];
 
-        System.out.println("Table size: " + (slackVariables.size()+1) + " X " + lastColumn);
         loadTable(problem);
         boolean solution = isSolution(simplexTable[slackVariables.size()]);
         String entryVariable;
@@ -321,12 +323,10 @@ public class SimplexSolver implements Solver {
             int pivotColumnIndex = getPivotColumnIndex(simplexTable[slackVariables.size()]);
             if(pivotColumnIndex >= 0)
             {
-                int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, lastColumn - 1);
+                int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, cols - 1);
                 if(pivotRowIndex >= 0)
                 {
                     entryVariable = problem.getVariables().get(pivotColumnIndex - 1);
-                    System.out.println("Out variable: "+simplexTable[pivotRowIndex][0]);
-                    System.out.println("Entry variable: "+entryVariable);
                     double pivotValue = (double)simplexTable[pivotRowIndex][pivotColumnIndex];
                     changeRow(pivotRowIndex, pivotValue, entryVariable);
                     updateSimplexTable(pivotColumnIndex, pivotRowIndex);
@@ -343,27 +343,24 @@ public class SimplexSolver implements Solver {
             }
             
         }
-        List<Map<String, Double>> resultSet = new ArrayList<>();
+        double optimumValue = (double)simplexTable[slackVariables.size()][cols-1];
+        Result res = new Result(null, optimumValue);
         //Check if the desition variables are in the table.
         for(String variable : problem.getVariables())
         {
             if(!isInBaseColumn(variable))//It means it's a multiple solution.
             {
-                System.out.println("Entry variable: "+variable);
-                resultSet.add(getOptimumPoints(problem));//Adds the current solution before the matrix changes.
+                getOptimumPoints(problem, res);//Adds the current solution before the matrix changes.
                 int pivotColumnIndex = problem.getVariables().indexOf(variable)+1;
-                int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, lastColumn - 1);
-                System.out.println("Out variable: "+simplexTable[pivotRowIndex][0]);
+                int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, cols - 1);
                 double pivotValue = (double)simplexTable[pivotRowIndex][pivotColumnIndex];
                 changeRow(pivotRowIndex, pivotValue, variable);
                 updateSimplexTable(pivotColumnIndex, pivotRowIndex);
             }
         }
-        resultSet.add(getOptimumPoints(problem));
-        double optimumValue = (double)simplexTable[slackVariables.size()][lastColumn-1];
-        System.out.println("Z= "+optimumValue);
-        Result res = new Result(null, optimumValue);
-        res.setResults(resultSet);
+        getOptimumPoints(problem, res);
+        
+
         return res;
     }
     
