@@ -14,8 +14,8 @@ public class KnapsackSolver {
         List<Item> items = algorithm.calcSolution();
         
         if (algorithm.isCalculated()) {
-            int weight = algorithm.getSolutionWeight();
-            int value = algorithm.getProfit();
+            double weight = algorithm.getSolutionWeight();
+            double value = algorithm.getProfit();
             return new KnapsackResult(items, weight, value);
         }
         else {

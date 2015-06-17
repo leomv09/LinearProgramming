@@ -10,25 +10,25 @@ import java.util.List;
 public class KnapsackProblem {
     
     private List<Item> items;
-    private int maxWeight;
+    private double maxWeight;
 
-    public KnapsackProblem(List<Item> items, int maxWeight) {
+    public KnapsackProblem(List<Item> items, double maxWeight) {
         this.items = items;
         this.maxWeight = maxWeight;
     }
     
-    public KnapsackProblem(int maxWeight){
+    public KnapsackProblem(double maxWeight){
         this.items = new ArrayList<>();
         this.maxWeight = maxWeight;
     }
     
     public void addItem(Item item) {
-        int bounding = this.maxWeight / item.getWeight();
+        int bounding = (int) Math.floor(this.maxWeight / item.getWeight());
         item.setBounding(bounding);
         items.add(item);
     }
     
-    public void addItem(String name, int weight, int value) {
+    public void addItem(String name, double weight, double value) {
         addItem(new Item(name, weight, value));
     }
 
@@ -40,7 +40,7 @@ public class KnapsackProblem {
         this.items = items;
     }
 
-    public int getMaxWeight() {
+    public double getMaxWeight() {
         return maxWeight;
     }
 

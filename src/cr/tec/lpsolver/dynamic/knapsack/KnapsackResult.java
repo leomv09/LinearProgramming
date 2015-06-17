@@ -9,10 +9,10 @@ import java.util.List;
 public class KnapsackResult {
     
     private final List<Item> items;
-    private final int totalWeight;
-    private final int totalValue;
+    private final double totalWeight;
+    private final double totalValue;
 
-    public KnapsackResult(List<Item> items, int totalWeight, int totalValue) {
+    public KnapsackResult(List<Item> items, double totalWeight, double totalValue) {
         this.items = items;
         this.totalWeight = totalWeight;
         this.totalValue = totalValue;
@@ -32,11 +32,11 @@ public class KnapsackResult {
         return null;
     }
 
-    public int getTotalWeight() {
+    public double getTotalWeight() {
         return totalWeight;
     }
 
-    public int getTotalValue() {
+    public double getTotalValue() {
         return totalValue;
     }
 

@@ -5,8 +5,8 @@ import java.util.Objects;
 public class Item {
 
     private String name;
-    private int weight;
-    private int value;
+    private double weight;
+    private double value;
     private int bounding;
     private int inKnapsack;
 
@@ -25,27 +25,27 @@ public class Item {
         setBounding(item.bounding);
     }
 
-    public Item(int _weight, int _value) {
+    public Item(double _weight, double _value) {
         this();
         setWeight(_weight);
         setValue(_value);
     }
 
-    public Item(int _weight, int _value, int _bounding) {
+    public Item(double _weight, double _value, int _bounding) {
         this();
         setWeight(_weight);
         setValue(_value);
         setBounding(_bounding);
     }
 
-    public Item(String _name, int _weight, int _value) {
+    public Item(String _name, double _weight, double _value) {
         this();
         setName(_name);
         setWeight(_weight);
         setValue(_value);
     }
 
-    public Item(String _name, int _weight, int _value, int _bounding) {
+    public Item(String _name, double _weight, double _value, int _bounding) {
         this();
         setName(_name);
         setWeight(_weight);
@@ -57,11 +57,11 @@ public class Item {
         name = _name;
     }
 
-    public void setWeight(int _weight) {
+    public void setWeight(double _weight) {
         weight = Math.max(_weight, 0);
     }
 
-    public void setValue(int _value) {
+    public void setValue(double _value) {
         value = Math.max(_value, 0);
     }
 
@@ -87,11 +87,11 @@ public class Item {
         return name;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -110,12 +110,12 @@ public class Item {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 47 * hash + Objects.hashCode(this.name);
-        hash = 47 * hash + this.weight;
-        hash = 47 * hash + this.value;
-        hash = 47 * hash + this.bounding;
-        hash = 47 * hash + this.inKnapsack;
+        int hash = 3;
+        hash = 71 * hash + Objects.hashCode(this.name);
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.weight) ^ (Double.doubleToLongBits(this.weight) >>> 32));
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.value) ^ (Double.doubleToLongBits(this.value) >>> 32));
+        hash = 71 * hash + this.bounding;
+        hash = 71 * hash + this.inKnapsack;
         return hash;
     }
 
@@ -140,10 +140,7 @@ public class Item {
         if (this.bounding != other.bounding) {
             return false;
         }
-        if (this.inKnapsack != other.inKnapsack) {
-            return false;
-        }
-        return true;
+        return this.inKnapsack == other.inKnapsack;
     }
     
     

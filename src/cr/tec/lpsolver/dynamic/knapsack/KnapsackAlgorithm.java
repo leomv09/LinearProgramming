@@ -7,9 +7,9 @@ import java.util.List;
 public class KnapsackAlgorithm {
 
     protected List<Item> itemList;
-    protected int maxWeight;
-    protected int solutionWeight;
-    protected int profit;
+    protected double maxWeight;
+    protected double solutionWeight;
+    protected double profit;
     protected boolean calculated;
 
     public KnapsackAlgorithm() {
@@ -20,7 +20,7 @@ public class KnapsackAlgorithm {
         calculated = false;
     }
 
-    public KnapsackAlgorithm(int _maxWeight) {
+    public KnapsackAlgorithm(double _maxWeight) {
         this();
         setMaxWeight(_maxWeight);
     }
@@ -30,7 +30,7 @@ public class KnapsackAlgorithm {
         setItemList(_itemList);
     }
 
-    public KnapsackAlgorithm(List<Item> _itemList, int _maxWeight) {
+    public KnapsackAlgorithm(List<Item> _itemList, double _maxWeight) {
         this();
         setItemList(_itemList);
         setMaxWeight(_maxWeight);
@@ -46,41 +46,43 @@ public class KnapsackAlgorithm {
 
         setInitialStateForCalculation();
         if (n > 0 && maxWeight > 0) {
-            List< List<Integer>> c = new ArrayList<>();
-            List<Integer> curr = new ArrayList<>();
+            List< List<Double>> c = new ArrayList<>();
+            List<Double> curr = new ArrayList<>();
 
+            double increment = calculateIncrement();
+            
             c.add(curr);
             for (int j = 0; j <= maxWeight; j++) {
-                curr.add(0);
+                curr.add(0.0);
             }
             for (int i = 1; i <= n; i++) {
-                List<Integer> prev = curr;
+                List<Double> prev = curr;
                 c.add(curr = new ArrayList<>());
                 for (int j = 0; j <= maxWeight; j++) {
                     if (j > 0) {
-                        int wH = itemList.get(i - 1).getWeight();
+                        double wH = itemList.get(i - 1).getWeight();
                         curr.add(
                                 (wH > j)
                                         ? prev.get(j)
                                         : Math.max(
                                                 prev.get(j),
-                                                itemList.get(i - 1).getValue() + prev.get(j - wH)
+                                                itemList.get(i - 1).getValue() + prev.get(j - (int) Math.ceil(wH))
                                         )
                         );
                     } else {
-                        curr.add(0);
+                        curr.add(0.0);
                     }
                 } // for (j...)
             } // for (i...)
-            profit = curr.get(maxWeight);
-
-            for (int i = n, j = maxWeight; i > 0 && j >= 0; i--) {
-                int tempI = c.get(i).get(j);
-                int tempI_1 = c.get(i - 1).get(j);
+            profit = curr.get(curr.size() - 1);
+            double j = maxWeight;
+            for (int i = n; i > 0 && j >= 0; i--) {
+                double tempI = c.get(i).get((int) Math.ceil(j));
+                double tempI_1 = c.get(i - 1).get((int) Math.ceil(j));
                 if ((i == 0 && tempI > 0)
                         || (i > 0 && tempI != tempI_1)) {
                     Item iH = itemList.get(i - 1);
-                    int wH = iH.getWeight();
+                    double wH = iH.getWeight();
                     iH.setInKnapsack(1);
                     j -= wH;
                     solutionWeight += wH;
@@ -92,7 +94,7 @@ public class KnapsackAlgorithm {
     }
 
     // add an item to the item list
-    public void add(String name, int weight, int value) {
+    public void add(String name, double weight, double value) {
         if (name.equals("")) {
             name = "" + (itemList.size() + 1);
         }
@@ -101,7 +103,7 @@ public class KnapsackAlgorithm {
     }
 
     // add an item to the item list
-    public void add(int weight, int value) {
+    public void add(double weight, double value) {
         add("", weight, value); // the name will be "itemList.size() + 1"!
     }
 
@@ -121,14 +123,14 @@ public class KnapsackAlgorithm {
         setInitialStateForCalculation();
     }
 
-    public int getProfit() {
+    public double getProfit() {
         if (!calculated) {
             calcSolution();
         }
         return profit;
     }
 
-    public int getSolutionWeight() {
+    public double getSolutionWeight() {
         return solutionWeight;
     }
 
@@ -136,11 +138,11 @@ public class KnapsackAlgorithm {
         return calculated;
     }
 
-    public int getMaxWeight() {
+    public double getMaxWeight() {
         return maxWeight;
     }
 
-    public void setMaxWeight(int _maxWeight) {
+    public void setMaxWeight(double _maxWeight) {
         maxWeight = Math.max(_maxWeight, 0);
     }
 
@@ -170,6 +172,19 @@ public class KnapsackAlgorithm {
         calculated = false;
         profit = 0;
         solutionWeight = 0;
+    }
+
+    private double calculateIncrement() {
+        double increment = Double.MAX_VALUE;
+        for (Item item : itemList) {
+            if (item.getWeight() < increment) {
+                increment = item.getWeight();
+            }
+        }
+        if (increment > 1) {
+            increment = 1;
+        }
+        return increment;
     }
 
 }
