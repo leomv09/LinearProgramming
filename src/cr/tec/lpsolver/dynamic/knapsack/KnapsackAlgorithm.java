@@ -6,11 +6,11 @@ import java.util.List;
 
 public class KnapsackAlgorithm {
 
-    private List<Item> itemList;
-    private int maxWeight;
-    private int solutionWeight;
-    private int profit;
-    private boolean calculated;
+    protected List<Item> itemList;
+    protected int maxWeight;
+    protected int solutionWeight;
+    protected int profit;
+    protected boolean calculated;
 
     public KnapsackAlgorithm() {
         itemList = new ArrayList<>();

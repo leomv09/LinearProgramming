@@ -22,6 +22,8 @@ public class KnapsackProblemTest {
         
         KnapsackSolver solver = new KnapsackSolver();
         KnapsackResult result = (KnapsackResult) solver.solve(problem);
+        
+        System.out.println(result);
                 
         assertThat(result.getItem("Item 1").getInKnapsack(), is(2));
         assertThat(result.getItem("Item 2").getInKnapsack(), is(0));

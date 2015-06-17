@@ -12,7 +12,7 @@ public class KnapsackProblem {
     private List<Item> items;
     private int maxWeight;
 
-    public KnapsackProblem(List<Item> items, int maxWeight){
+    public KnapsackProblem(List<Item> items, int maxWeight) {
         this.items = items;
         this.maxWeight = maxWeight;
     }
@@ -23,11 +23,13 @@ public class KnapsackProblem {
     }
     
     public void addItem(Item item) {
+        int bounding = this.maxWeight / item.getWeight();
+        item.setBounding(bounding);
         items.add(item);
     }
     
     public void addItem(String name, int weight, int value) {
-        items.add(new Item(name, weight, value));
+        addItem(new Item(name, weight, value));
     }
 
     public List<Item> getItems() {

@@ -10,7 +10,7 @@ public class KnapsackSolver {
     
     public Object solve(Object obj) throws Exception {
         KnapsackProblem problem = (KnapsackProblem) obj;
-        KnapsackAlgorithm algorithm = new KnapsackAlgorithm(problem);
+        KnapsackBoundedAlgorithm algorithm = new KnapsackBoundedAlgorithm(problem);
         List<Item> items = algorithm.calcSolution();
         
         if (algorithm.isCalculated()) {
