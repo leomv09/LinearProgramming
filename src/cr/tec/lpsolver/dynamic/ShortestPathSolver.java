@@ -5,18 +5,21 @@
  */
 package cr.tec.lpsolver.dynamic;
 
-import java.util.List;
 
 /**
  *
  * @author Leo
  */
-public class ShortestPathMethod 
+public class ShortestPathSolver implements DynamicSolver
 {
-    public static void solveGraph(List<Node> Nodes, List<Edge> Edges)
-    {
-        Graph graph = new Graph(Nodes.get(0), Nodes.get(Nodes.size()-1), Nodes, Edges);
+    @Override
+    public Object solve(Object obj) throws Exception {
         
+        Graph graph = (Graph) obj;
         double optimumValue = graph.solveGraph();
+        
+        ShortestPathResult res = new ShortestPathResult(optimumValue, graph.getRoutes());
+
+        return res;
     }
 }

@@ -7,6 +7,8 @@ package cr.tec.lpsolver.dynamic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
@@ -84,8 +86,13 @@ public class ShortestPathMethodTest {
     @Test
     public void solve()
     {
-        assertThat("Optimum cost is: ", graph.solveGraph(), is(21.0));
-        assertThat("Optimum paths is: ", graph.getRoutes().size(), is(1));
-        assertThat("Best route is: ", graph.getRoutes().get(0), is("1->4->5->7"));
+        ShortestPathSolver solver = new ShortestPathSolver();
+        try {
+            ShortestPathResult res = (ShortestPathResult) solver.solve(graph);
+            assertThat("Optimum cost is: ", res.getValue(), is(21.0));
+            assertThat("Optimum paths is: ", res.getRoutes().size(), is(1));
+        } catch (Exception ex) {
+            Logger.getLogger(ShortestPathMethodTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

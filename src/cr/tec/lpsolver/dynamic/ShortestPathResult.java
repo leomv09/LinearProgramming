@@ -42,5 +42,22 @@ public class ShortestPathResult {
         return routes;
     }
     
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        
+        int i = 1;
+        sb.append("Routes: ").append("\n");
+        sb.append("{").append("\n");
+        for(String route : this.routes)
+        {
+           sb.append("  Route ").append(i).append(": ").append(route).append("\n");
+        }
+        sb.append("}").append("\n");
+        sb.append("Optimum cost: ").append(value);
+        return sb.toString();
+    }
+    
     
 }
