@@ -1,5 +1,12 @@
 package cr.tec.lpsolver;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+
 public class DualAlgorithm {
     
     private static final double EPSILON = 1.0E-10;
@@ -9,6 +16,8 @@ public class DualAlgorithm {
 
     private int[] basis;    // basis[i] = basic variable corresponding to row i
                             // only needed to print out solution, not book
+    
+    private final File out;
 
     // sets up the simplex tableaux
     public DualAlgorithm(double[][] A, double[] b, double[] c) throws Exception {
@@ -24,6 +33,11 @@ public class DualAlgorithm {
 
         basis = new int[M];
         for (int i = 0; i < M; i++) basis[i] = N + i;
+        
+        this.out = new File("output.txt");
+        if (this.out.exists()) {
+            this.out.delete();
+        }
         
         solve();
         
@@ -49,6 +63,8 @@ public class DualAlgorithm {
 
             // update basis
             basis[p] = q;
+            
+            writeTableToFile();
         }
     }
 
@@ -186,6 +202,23 @@ public class DualAlgorithm {
 
     private boolean check(double[][]A, double[] b, double[] c) {
         return isPrimalFeasible(A, b) && isDualFeasible(A, c) && isOptimal(b, c);
+    }
+    
+    private void writeTableToFile() {
+        StringBuilder sb = new StringBuilder();
+        for (double[] row : a) {
+            sb.append(Arrays.toString(row)).append("\n");
+        }
+        sb.append("\n");
+        System.out.println(out);
+        
+        try
+        {
+            FileWriter fw = new FileWriter(out, true); //the true will append the new data
+            fw.write(sb.toString());//appends the string to the file
+            fw.close();
+        }
+        catch(IOException ex) { }
     }
 
 }
