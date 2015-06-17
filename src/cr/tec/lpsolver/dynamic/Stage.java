@@ -79,16 +79,17 @@ public class Stage {
      * @param node The node to check.
      * @return 
      */
-    public Node getOptimumNode(Node node)
+    public List<Node> getOptimumNode(Node node)
     {
+        List<Node> nodes = new ArrayList<>();
         for(Map<Node, Node> map : optimumNodes)
         {
             if(map.containsKey(node))
             {
-                return map.get(node);
+                nodes.add(map.get(node));
             }
         }
-        return null;
+        return nodes;
     }
     
     /**

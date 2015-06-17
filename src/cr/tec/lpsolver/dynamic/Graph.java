@@ -181,10 +181,10 @@ public class Graph {
      * @param endNodes A list of nodes that the node is connected with.
      * @return A list of optimum nodes.
      */
-    private Node calculateBestPath(Node node, List<Node> endNodes)
+    private List<Node> calculateBestPath(Node node, List<Node> endNodes)
     {
         double currentValue = Double.POSITIVE_INFINITY;
-        Node bestNode = null;
+        List<Node> res = new ArrayList<>();
         for(Node endNode : endNodes)
         {
             if(connectionExists(node, endNode))
@@ -193,11 +193,20 @@ public class Graph {
                 if(value < currentValue)
                 {
                     currentValue = value;
-                    bestNode = endNode;
                 }
             }
         }
-        return bestNode;
+        
+        for(Node endNode : endNodes)
+        {
+            double value = getConnectionValue(node, endNode);
+            if(value == currentValue)
+            {
+                res.add(endNode);
+            }
+        }
+        
+        return res;
     }
     
     /**
@@ -246,24 +255,42 @@ public class Graph {
                         stage.addAggregateValue(map);
                     }
                 }
-                stage.addOptimumNode(startNode, calculateBestPath(startNode, stage.getEndNodes()));
+                List<Node> bestNodes = calculateBestPath(startNode, stage.getEndNodes());
+                for(Node node : bestNodes)
+                {
+                    stage.addOptimumNode(startNode, node);
+                }
             }
             i++;
         }
         i--;
+        
         Stage firstStage = stages.get(i);
         double value = firstStage.getAggregateValue(start);
-        
-        Node bestNode = firstStage.getOptimumNode(start);
-        route = start.getName();
-        for(int j = 1; j < stages.size(); j++)
-        {
-            route += "->" + bestNode.getName();
-            i--;
-            bestNode = stages.get(i).getOptimumNode(bestNode);
-        }
-        route += "->" + end.getName();
+
         return value;
+    }
+    
+    
+    public List<String> getRoutes(int stageIndex, Node endNode)
+    {
+        List<String> res = new ArrayList<>();
+        Stage firstStage = stages.get(stageIndex);
+        List<Node> bestNodes = firstStage.getOptimumNode(start);
+        for(Node bestNode : bestNodes)
+        {
+            String route = start.getName();
+            Node currentNode = bestNode;
+           for(int j = 1; j < stages.size(); j++)
+           {
+               route += "->" + currentNode.getName();
+               stageIndex--;
+               currentNode = stages.get(stageIndex).getOptimumNode(currentNode).get(0);
+           }
+           route += "->" + endNode.getName();
+           res.add(route);
+        }     
+        return res;
     }
 
     /**
@@ -298,7 +325,7 @@ public class Graph {
     
     /**
      * Obtains the optimum routes.
-     * @return 
+     * @return A list of optimum paths.
      */
     public String getRoute()
     {
