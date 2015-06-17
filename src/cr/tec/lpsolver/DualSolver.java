@@ -26,12 +26,12 @@ public class DualSolver implements Solver {
         
         DualAlgorithm algorithm = new DualAlgorithm(A, b, c);
         Result result = new Result(null, algorithm.value());
-        double[] dual = algorithm.dual();
+        double[] primal = algorithm.primal();
         result.createSet();
         
         List<String> variables = problem.getVariables();
-        for (int i = 0; i < dual.length; i++) {
-            result.addVariable(variables.get(i), dual[i]);
+        for (int i = 0; i < primal.length; i++) {
+            result.addVariable(variables.get(i), primal[i]);
         }
         
         return result;

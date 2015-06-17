@@ -181,11 +181,7 @@ public class DualAlgorithm {
         double value2 = 0.0;
         for (int i = 0; i < y.length; i++)
             value2 += y[i] * b[i];
-        if (Math.abs(value - value1) > EPSILON || Math.abs(value - value2) > EPSILON) {
-            return false;
-        }
-
-        return true;
+        return !(Math.abs(value - value1) > EPSILON || Math.abs(value - value2) > EPSILON);
     }
 
     private boolean check(double[][]A, double[] b, double[] c) {

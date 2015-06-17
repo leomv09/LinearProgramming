@@ -1,5 +1,6 @@
 package cr.tec.lpsolver;
 
+import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
@@ -45,9 +46,15 @@ public class SimplexSolverTest {
         linear.add(1.0, "x2");
         linear.add(1.0, "x3");
         problem.addConstraint(linear, Relationship.LEQ, 100.0);
-
+        
         Result result = solver.solve(problem);
+        Map<String, Double> values = result.getResults();
+        
         assertThat(result.getOptimumValue(), is(1000.0));
+        assertThat(result.size(), is(1));
+        assertThat(values, hasEntry("x1", 0.0));
+        assertThat(values, hasEntry("x2", 0.0));
+        assertThat(values, hasEntry("x3", 100.0));
     }
     
 }
