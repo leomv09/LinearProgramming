@@ -1,5 +1,8 @@
 package cr.tec.lpsolver.transport;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class HungarianAlgorithm {
@@ -12,6 +15,7 @@ public class HungarianAlgorithm {
   private final int[] matchJobByWorker, matchWorkerByJob;
   private final int[] parentWorkerByCommittedJob;
   private final boolean[] committedWorkers;
+  private final File out;
 
   /**
    * Construct an instance of the algorithm.
@@ -46,6 +50,7 @@ public class HungarianAlgorithm {
     Arrays.fill(matchJobByWorker, -1);
     matchWorkerByJob = new int[this.dim];
     Arrays.fill(matchWorkerByJob, -1);
+    this.out = new File("output.txt");
   }
 
   /**
@@ -79,15 +84,20 @@ public class HungarianAlgorithm {
      * smallest element, compute an initial non-zero dual feasible solution and
      * create a greedy matching from workers to jobs of the cost matrix.
      */
+    writeTableToFile();
+    
     reduce();
     computeInitialFeasibleSolution();
     greedyMatch();
+    
+    writeTableToFile();
 
     int w = fetchUnmatchedWorker();
     while (w < dim) {
       initializePhase(w);
       executePhase();
       w = fetchUnmatchedWorker();
+      writeTableToFile();
     }
     int[] result = Arrays.copyOf(matchJobByWorker, rows);
     for (w = 0; w < result.length; w++) {
@@ -281,4 +291,16 @@ public class HungarianAlgorithm {
       }
     }
   }
+  
+  private void writeTableToFile() {
+        StringBuilder sb = new StringBuilder();
+        for (double[] row : costMatrix) {
+            sb.append(Arrays.toString(row)).append("\n");
+        }
+        sb.append("\n");
+        try (FileWriter fw = new FileWriter(out, true)) {
+            fw.write(sb.toString());
+        }
+        catch(IOException ex) { }
+    }
 }

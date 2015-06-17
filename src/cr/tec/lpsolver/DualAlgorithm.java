@@ -210,13 +210,8 @@ public class DualAlgorithm {
             sb.append(Arrays.toString(row)).append("\n");
         }
         sb.append("\n");
-        System.out.println(out);
-        
-        try
-        {
-            FileWriter fw = new FileWriter(out, true); //the true will append the new data
-            fw.write(sb.toString());//appends the string to the file
-            fw.close();
+        try (FileWriter fw = new FileWriter(out, true)) {
+            fw.write(sb.toString());
         }
         catch(IOException ex) { }
     }
