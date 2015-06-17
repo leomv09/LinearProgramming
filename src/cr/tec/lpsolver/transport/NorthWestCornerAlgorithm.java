@@ -199,7 +199,7 @@ public class NorthWestCornerAlgorithm {
                 row += " " + shippingTable[i][j] + " ";
             }
             row += "]";
-            System.out.println(row + "\n");
+            System.out.println(row);
             out.write(row + "\n");
         }
         out.close();
