@@ -147,16 +147,6 @@ public class SimplexSolver implements Solver {
     }
     
     /**
-     * Indicates if the degenerate case is in the current iteration.
-     * 
-     * @return true if it is a degenerate, false otherwise.
-     */
-    private boolean isDegenerateCase()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    /**
      * Obtains the pivot row index, in order to know what is the out variable.
      * 
      * @param columnIndex The pivot column index.
@@ -291,11 +281,6 @@ public class SimplexSolver implements Solver {
         }
     }
     
-    private void printTable()
-    {
-        
-    }
-    
     /**
      * Method that solves the problem with the simplex method.
      * 
@@ -305,63 +290,66 @@ public class SimplexSolver implements Solver {
      */
     @Override
     public Result solve(Problem problem) throws Exception {
-        if(problem.getProblemType() == ProblemType.MIN)
-        {
-            problem.setObjetiveFunction(problem.getObjetiveFunction().numberTimesLinear(-1));
-        }
-        createSlackVariables(problem.getConstraints());
-        cols = (problem.getVariables().size() + slackVariables.size()) + 2;
-        rows = slackVariables.size()+1;
-        simplexTable = new Object[rows][cols];
         Solver s = new DualSolver();
-
-        loadTable(problem);
-        boolean solution = isSolution(simplexTable[slackVariables.size()]);
-        String entryVariable;
-        
-        while(!solution)
-        {
-            int pivotColumnIndex = getPivotColumnIndex(simplexTable[slackVariables.size()]);
-            if(pivotColumnIndex >= 0)
+        Result res;
+        try {
+            if(problem.getProblemType() == ProblemType.MIN)
             {
-                int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, cols - 1);
-                if(pivotRowIndex >= 0)
+                problem.setObjetiveFunction(problem.getObjetiveFunction().numberTimesLinear(-1));
+            }
+            createSlackVariables(problem.getConstraints());
+            cols = (problem.getVariables().size() + slackVariables.size()) + 2;
+            rows = slackVariables.size()+1;
+            simplexTable = new Object[rows][cols];
+
+            loadTable(problem);
+            boolean solution = isSolution(simplexTable[slackVariables.size()]);
+            String entryVariable;
+
+            while(!solution)
+            {
+                int pivotColumnIndex = getPivotColumnIndex(simplexTable[slackVariables.size()]);
+                if(pivotColumnIndex >= 0)
                 {
-                    entryVariable = problem.getVariables().get(pivotColumnIndex - 1);
-                    double pivotValue = (double)simplexTable[pivotRowIndex][pivotColumnIndex];
-                    changeRow(pivotRowIndex, pivotValue, entryVariable);
-                    updateSimplexTable(pivotColumnIndex, pivotRowIndex);
-                    solution = isSolution(simplexTable[slackVariables.size()]);
+                    int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, cols - 1);
+                    if(pivotRowIndex >= 0)
+                    {
+                        entryVariable = problem.getVariables().get(pivotColumnIndex - 1);
+                        double pivotValue = (double)simplexTable[pivotRowIndex][pivotColumnIndex];
+                        changeRow(pivotRowIndex, pivotValue, entryVariable);
+                        updateSimplexTable(pivotColumnIndex, pivotRowIndex);
+                        solution = isSolution(simplexTable[slackVariables.size()]);
+                    }
+                    else
+                    {
+                        break;//Error.
+                    }
                 }
                 else
                 {
-                    break;//Error.
+                    break;//Possible solution.
+                }
+
+            }
+            double optimumValue = (double)simplexTable[slackVariables.size()][cols-1];
+            res = new Result(null, optimumValue);
+            //Check if the desition variables are in the table.
+            for(String variable : problem.getVariables())
+            {
+                if(!isInBaseColumn(variable))//It means it's a multiple solution.
+                {
+                    getOptimumPoints(problem, res);//Adds the current solution before the matrix changes.
+                    int pivotColumnIndex = problem.getVariables().indexOf(variable)+1;
+                    int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, cols - 1);
+                    double pivotValue = (double)simplexTable[pivotRowIndex][pivotColumnIndex];
+                    changeRow(pivotRowIndex, pivotValue, variable);
+                    updateSimplexTable(pivotColumnIndex, pivotRowIndex);
                 }
             }
-            else
-            {
-                break;//Possible solution.
-            }
-            
+            getOptimumPoints(problem, res);
         }
-        double optimumValue = (double)simplexTable[slackVariables.size()][cols-1];
-        Result res = new Result(null, optimumValue);
-        //Check if the desition variables are in the table.
-        for(String variable : problem.getVariables())
-        {
-            if(!isInBaseColumn(variable))//It means it's a multiple solution.
-            {
-                getOptimumPoints(problem, res);//Adds the current solution before the matrix changes.
-                int pivotColumnIndex = problem.getVariables().indexOf(variable)+1;
-                int pivotRowIndex = getPivotRowIndex(pivotColumnIndex, cols - 1);
-                double pivotValue = (double)simplexTable[pivotRowIndex][pivotColumnIndex];
-                changeRow(pivotRowIndex, pivotValue, variable);
-                updateSimplexTable(pivotColumnIndex, pivotRowIndex);
-            }
-        }
-        getOptimumPoints(problem, res);
+        catch (Exception e) {}
         res = s.solve(problem);
-
         return res;
     }
     
