@@ -313,6 +313,7 @@ public class SimplexSolver implements Solver {
         cols = (problem.getVariables().size() + slackVariables.size()) + 2;
         rows = slackVariables.size()+1;
         simplexTable = new Object[rows][cols];
+        Solver s = new DualSolver();
 
         loadTable(problem);
         boolean solution = isSolution(simplexTable[slackVariables.size()]);
@@ -359,7 +360,7 @@ public class SimplexSolver implements Solver {
             }
         }
         getOptimumPoints(problem, res);
-        
+        res = s.solve(problem);
 
         return res;
     }

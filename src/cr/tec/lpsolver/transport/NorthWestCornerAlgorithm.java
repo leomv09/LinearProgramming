@@ -145,7 +145,6 @@ public class NorthWestCornerAlgorithm {
     
     public void printTable() throws FileNotFoundException, IOException
     {
-        System.out.println("----- Costs Table -----");
         FileWriter out = new FileWriter(reportFile,true);
         out.write("\n");
         out.write("----- Costs Table -----\n");
@@ -159,7 +158,6 @@ public class NorthWestCornerAlgorithm {
                     row += " X ";
                 }
                 row += "]";
-                System.out.println(row);
                 out.write(row + "\n");
             }
             else
@@ -176,7 +174,6 @@ public class NorthWestCornerAlgorithm {
                     }
                 }
                 row += "]";
-                System.out.println(row);
                 out.write(row + "\n");
 
             }
@@ -187,7 +184,6 @@ public class NorthWestCornerAlgorithm {
     
     private void printShippingTable() throws FileNotFoundException, IOException
     {
-        System.out.println("----- Shipping Table -----");
         FileWriter out = new FileWriter(reportFile,true);
         out.write("\n");
         out.write("----- Shipping Table -----\n");
@@ -199,7 +195,6 @@ public class NorthWestCornerAlgorithm {
                 row += " " + shippingTable[i][j] + " ";
             }
             row += "]";
-            System.out.println(row);
             out.write(row + "\n");
         }
         out.close();

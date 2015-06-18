@@ -6,12 +6,14 @@
 package cr.tec.lpsolver.transport;
 
 import cr.tec.lpsolver.Constraint;
+import cr.tec.lpsolver.DualSolver;
 import cr.tec.lpsolver.GraphicalSolver;
 import cr.tec.lpsolver.Linear;
 import cr.tec.lpsolver.Problem;
 import cr.tec.lpsolver.ProblemType;
 import cr.tec.lpsolver.Relationship;
 import cr.tec.lpsolver.Result;
+import cr.tec.lpsolver.Solver;
 import cr.tec.lpsolver.Term;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,17 +55,23 @@ public class DefaultTransportAlgorithm {
     {
         double[][] resultMatrix = new double[rows][columns];
         Problem linearProblem = this.toProblem();
-        GraphicalSolver solver = new GraphicalSolver();
+        
+        System.out.println(linearProblem);
+        
+        Solver solver = new GraphicalSolver();
         Result res = solver.solve(linearProblem);
         
-        Map optimumPoint = res.getResults(0);
+        System.out.println(res);
         
+        Map optimumPoint = res.getResults(0);
         for(int i = 0; i < rows; i++)
         {
             for(int j = 0; j < columns; j++)
             {
-                Linear function = shippingTable[i][j].getLinear();
-                resultMatrix[i][j] = function.evaluate(optimumPoint);
+                Constraint con = shippingTable[i][j];
+                Linear function = con.getLinear();
+                System.out.println(con);
+                resultMatrix[i][j] = function.evaluate(optimumPoint) + con.getConstant();
             }
         }
         return resultMatrix;
@@ -155,7 +163,7 @@ public class DefaultTransportAlgorithm {
                         else
                         {
                             linear = linear.numberTimesLinear(-1);
-                            cons = new Constraint(linear, Relationship.LEQ, res);
+                            cons = new Constraint(linear, Relationship.GEQ, res);
                             constraints.add(cons);
                         }
                     }
@@ -195,7 +203,7 @@ public class DefaultTransportAlgorithm {
                         Linear linear = new Linear();
                         linear.add(-1, "x");
                         linear.add(-1, "y");
-                        Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
+                        Constraint cons = new Constraint(linear, Relationship.GEQ, supply[i]);
                         shippingTable[i][j] = cons;
                     }
                 }
@@ -207,7 +215,7 @@ public class DefaultTransportAlgorithm {
                         Linear linear = new Linear();
                         String variable = currentConstr.getLinear().getVariables().get(0);
                         linear.add(-1, variable);
-                        Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
+                        Constraint cons = new Constraint(linear, Relationship.GEQ, demand[j]);
                         shippingTable[i][j] = cons;
                     }
                     else
@@ -223,7 +231,7 @@ public class DefaultTransportAlgorithm {
                         {
                             linear.add(- term.getCoefficient(), term.getVariable());
                         }
-                        Constraint cons = new Constraint(linear, Relationship.GEQ, 0);
+                        Constraint cons = new Constraint(linear, Relationship.GEQ, demand[j] - supply[i-1]);
                         shippingTable[i][j] = cons;
                     }
                 }
