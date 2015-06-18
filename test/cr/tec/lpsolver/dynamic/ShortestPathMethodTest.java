@@ -5,6 +5,11 @@
  */
 package cr.tec.lpsolver.dynamic;
 
+import cr.tec.lpsolver.dynamic.shortestpath.Edge;
+import cr.tec.lpsolver.dynamic.shortestpath.Node;
+import cr.tec.lpsolver.dynamic.shortestpath.ShortestPathResult;
+import cr.tec.lpsolver.dynamic.shortestpath.ShortestPathSolver;
+import cr.tec.lpsolver.dynamic.shortestpath.Graph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
