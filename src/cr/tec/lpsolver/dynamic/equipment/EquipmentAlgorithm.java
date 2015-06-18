@@ -1,6 +1,10 @@
 package cr.tec.lpsolver.dynamic.equipment;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +23,7 @@ public class EquipmentAlgorithm {
     private final int newCost;
     private final Phase[] phases;
     private Node[][] nodes;
+    private final File out;
 
     public EquipmentAlgorithm(EquipmentProblem problem) {
         this.years = problem.getYears();
@@ -28,6 +33,10 @@ public class EquipmentAlgorithm {
         this.table = problem.getTable();
         this.newCost = problem.getNewCost();
         this.phases = new Phase[years];
+        this.out = new File("output.txt");
+        if (this.out.exists()) {
+            this.out.delete();
+        }
         calculateNodes();
     }
     
@@ -39,6 +48,7 @@ public class EquipmentAlgorithm {
             else {
                 phases[i] = new Phase(nodes[i], phases[i+1], table, newCost);
             }
+            writeTableToFile(phases[i]);
         }
     }
     
@@ -123,6 +133,13 @@ public class EquipmentAlgorithm {
             }
         }
         return lnodes.toArray(new Node[lnodes.size()]);
+    }
+    
+    private void writeTableToFile(Phase phase) {
+        try (FileWriter fw = new FileWriter(out, true)) {
+            fw.write(phase.toString() + "\n");
+        }
+        catch(IOException ex) { }
     }
     
 }
