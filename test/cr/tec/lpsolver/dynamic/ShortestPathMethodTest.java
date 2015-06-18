@@ -27,7 +27,7 @@ public class ShortestPathMethodTest {
     {
         List<Edge> edges = new ArrayList<>();
         List<Node> nodes = new ArrayList<>();
-        node1 = new Node( "1");nodes.add(node1);
+        node1 = new Node("1");nodes.add(node1);
         node2 = new Node("2");nodes.add(node2);
         node3 = new Node("3");nodes.add(node3);
         node4 = new Node("4");nodes.add(node4);
@@ -89,6 +89,8 @@ public class ShortestPathMethodTest {
         ShortestPathSolver solver = new ShortestPathSolver();
         try {
             ShortestPathResult res = (ShortestPathResult) solver.solve(graph);
+            System.out.println(graph);
+            System.out.println(res);
             assertThat("Optimum cost is: ", res.getValue(), is(21.0));
             assertThat("Optimum paths is: ", res.getRoutes().size(), is(1));
         } catch (Exception ex) {

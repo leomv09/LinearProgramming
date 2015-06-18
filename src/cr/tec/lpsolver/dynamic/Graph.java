@@ -6,6 +6,7 @@
 package cr.tec.lpsolver.dynamic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,29 @@ public class Graph {
         this.edges = Edges;
         stages = new ArrayList<>();
         routes = new ArrayList<>();
+    }
+    
+    public Graph(int start, int end, int[][] table)
+    {
+        this.stages = new ArrayList<>();
+        this.routes = new ArrayList<>();
+        this.nodes = new ArrayList<>();
+        this.edges = new ArrayList<>();
+        
+        for (int i = 0; i < table.length; i++) {
+            this.nodes.add(new Node(i+1));
+        }
+        
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[0].length; j++) {
+                if (table[i][j] >= 0) {
+                    this.edges.add(new Edge(this.nodes.get(i), this.nodes.get(j), table[i][j]));
+                }
+            }
+        }
+        
+        this.start = nodes.get(start-1);
+        this.end = nodes.get(end-1);
     }
     
     /**
@@ -183,12 +207,10 @@ public class Graph {
      */
     private List<Node> calculateBestPath(Node node, List<Node> endNodes, int stageIndex)
     {
-        System.out.println("Current stage node: "+node.getName());
         double currentValue = Double.POSITIVE_INFINITY;
         List<Node> res = new ArrayList<>();
         for(Node endNode : endNodes)
         {
-            System.out.println("Current end node: "+ endNode.getName());
             if(connectionExists(node, endNode))
             {
                 double value = getConnectionValue(node, endNode) + getPreviousAggregateValue(stageIndex, endNode);
@@ -198,14 +220,12 @@ public class Graph {
                 }
             }
         }
-        System.out.println("Best value: "+currentValue);
         for(Node endNode : endNodes)
         {
             double value = getConnectionValue(node, endNode) + getPreviousAggregateValue(stageIndex, endNode);
             if(value == currentValue)
             {
                 res.add(endNode);
-                System.out.println("Best node: "+endNode.getName());
             }
         }
         
@@ -338,6 +358,18 @@ public class Graph {
             return getTotalStages();
         }
         return stages;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("Initial: ").append(this.start).append("\n");
+        sb.append("Final: ").append(this.end).append("\n");
+        sb.append("Nodes: ").append(this.nodes).append("\n");
+        sb.append("Edges: ").append(this.edges).append("\n");
+        
+        return sb.toString();
     }
     
   

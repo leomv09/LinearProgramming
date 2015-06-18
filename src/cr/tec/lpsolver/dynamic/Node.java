@@ -12,13 +12,18 @@ package cr.tec.lpsolver.dynamic;
 public class Node {
     private final String name;
     
-    public Node(String Name)
+    public Node(Object Name)
     {
-        this.name = Name;
+        this.name = Name.toString();
     }
     
     public String getName()
     {
         return this.name;
+    }
+    
+    @Override
+    public String toString() {
+        return name;
     }
 }

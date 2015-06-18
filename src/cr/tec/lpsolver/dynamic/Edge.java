@@ -32,4 +32,10 @@ public class Edge {
     public double getWight() {
         return wight;
     }   
+
+    @Override
+    public String toString() {
+        return "{" + "start=" + startNode + ", end=" + endNode + ", weight=" + wight + '}';
+    }
+
 }
