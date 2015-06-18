@@ -246,6 +246,7 @@ public class WorkForceSizeAlgorithm {
         StringBuilder sb = new StringBuilder();
         int j = 1;
         int optimumForce = stages.get(weeks-1).getOptimumForce(0).get(0);
+        double optimumCost = stages.get(weeks-1).getAggregateValue(0);
         sb.append("For week ").append(j).append(" the right number(s) is(are): ").append(optimumForce).append("\n");
         j++;
         for(int i = weeks - 2; i >= 0; i--)
@@ -266,6 +267,7 @@ public class WorkForceSizeAlgorithm {
             sb.append("\n");
             j++;
         }
+        sb.append("Optimum cost is: ").append(optimumCost);
         return  sb.toString();
     }
     

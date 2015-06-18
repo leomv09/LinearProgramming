@@ -172,4 +172,56 @@ public class Stage {
         return optimumNodes;
     }
     
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        sb.append("Stage Nodes").append("\n");
+        sb.append("{").append("\n");
+        String a = "";
+        for(Node node : stageNodes)
+        {
+            if(isFirst)
+            {
+                isFirst = false;
+            }
+            sb.append(a).append(node.getName()).append(" Aggregate Value: ").append(getAggregateValue(node));
+            a = " | ";
+        }
+        isFirst = true;
+        sb.append("\n");
+        sb.append("}").append("\n");
+        sb.append("Previous stage nodes: ");
+        sb.append("{").append("\n");
+        for(Node node : endNodes)
+        {
+            if(isFirst)
+            {
+                a = "";
+                isFirst = false;
+            }
+            sb.append(a).append(node.getName());
+            a = " | ";
+        }
+        isFirst = true;
+        sb.append("\n");
+        sb.append("}").append("\n");
+        sb.append("Optimum nodes: ");
+        sb.append("{").append("\n");
+        for(Node node : stageNodes)
+        {
+            if(isFirst)
+            {
+                a = "";
+                isFirst = false;
+            }
+            sb.append(a).append(getOptimumNode(node).get(0).getName());
+            a = " | ";
+        }
+        sb.append("\n");
+        sb.append("}").append("\n");
+        return sb.toString();
+    }
+    
 }

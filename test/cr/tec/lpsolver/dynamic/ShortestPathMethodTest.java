@@ -32,13 +32,13 @@ public class ShortestPathMethodTest {
     {
         List<Edge> edges = new ArrayList<>();
         List<Node> nodes = new ArrayList<>();
-        node1 = new Node("1");nodes.add(node1);
-        node2 = new Node("2");nodes.add(node2);
-        node3 = new Node("3");nodes.add(node3);
-        node4 = new Node("4");nodes.add(node4);
-        node5 = new Node("5");nodes.add(node5);
-        node6 = new Node("6");nodes.add(node6);
-        node7 = new Node("7");nodes.add(node7);
+        node1 = new Node("A");nodes.add(node1);
+        node2 = new Node("B");nodes.add(node2);
+        node3 = new Node("C");nodes.add(node3);
+        node4 = new Node("D");nodes.add(node4);
+        node5 = new Node("E");nodes.add(node5);
+        node6 = new Node("F");nodes.add(node6);
+        node7 = new Node("G");nodes.add(node7);
         edges.add(new Edge(node1, node2, 7));
         edges.add(new Edge(node1, node3, 8));
         edges.add(new Edge(node1, node4, 5));
@@ -94,6 +94,7 @@ public class ShortestPathMethodTest {
         ShortestPathSolver solver = new ShortestPathSolver();
         try {
             ShortestPathResult res = (ShortestPathResult) solver.solve(graph);
+            System.out.println(graph.getStages().get(1));
             System.out.println(graph);
             System.out.println(res);
             assertThat("Optimum cost is: ", res.getValue(), is(21.0));
