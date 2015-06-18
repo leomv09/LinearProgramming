@@ -6,6 +6,7 @@
 package cr.tec.lpsolver.dynamic.workforce;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +87,7 @@ public class WorkForceSizeAlgorithm {
         return res;
     }
     
-    private void setStages()
+    public void setStages()
     {
         List<Integer> prevStageNumbers = null;
         for(int i = weeks-1; i >= 0; i--)
@@ -96,6 +97,7 @@ public class WorkForceSizeAlgorithm {
                 List<Integer> list = new ArrayList<>();
                 list.add(0);
                 stages.add(new Stage(list, prevStageNumbers, i));
+                break;
                 
             }
             int currentWeek = currentWorkers.get(i);
@@ -147,10 +149,11 @@ public class WorkForceSizeAlgorithm {
         double value = Double.POSITIVE_INFINITY;
         for(Map<Integer, Double> map : maps)
         {
-            List<Double> list = (List<Double>) map.values();
-            for(int i = 0; i < list.size(); i++)
+            Collection<Double> dlist = map.values();
+            Object[] values = dlist.toArray();
+            for(int i = 0; i < dlist.size(); i++)
             {
-                double currentValue = list.get(i);
+                double currentValue = (double) values[i];
                 if(currentValue < value)
                 {
                     value = currentValue;
@@ -164,6 +167,7 @@ public class WorkForceSizeAlgorithm {
     private int getBestWorkForce(List<Map<Integer, Double>> maps, List<Integer> keys, double value)
     {
         int best = -1;
+        
         for(Map<Integer, Double> map : maps)
         {
             for(Integer key : keys)
@@ -177,16 +181,16 @@ public class WorkForceSizeAlgorithm {
                 }
             }
         }
-        
         return best;
     }
     
-    private void solve()
+    public WorkForceResult solve()
     {
         setStages();
         Stage prev = null;
-        for(Stage stage : stages)
+        for(int i = 0; i< stages.size(); i++)
         {
+            Stage stage = stages.get(i);
             for(Integer weekWorkNumber : stage.getWeekWorkers())
             {
                 List<Map<Integer, Double>> values = new ArrayList<>();
@@ -206,12 +210,14 @@ public class WorkForceSizeAlgorithm {
                 }
                 double optimumValue = this.getMinValue(values);
                 stage.addAggregateValue(weekWorkNumber, optimumValue);
-                stage.addOptimumWorkForce(weekWorkNumber, this.getBestWorkForce(values, stage.getPossibleWorkers(), optimumValue));
+                int optimumForce = this.getBestWorkForce(values, stage.getPossibleWorkers(), optimumValue);
+                stage.addOptimumWorkForce(weekWorkNumber, optimumForce);
             }
+            prev = stage;
         }
-        
-        List<Integer> force = stages.get(0).getOptimumForce(0);
         stages.get(0).getAggregateValue(0);
+        WorkForceResult res = new WorkForceResult(stages.get(stages.size() - 1).getAggregateValue(0), this.toString());
+        return res;
     }
 
     public List<Stage> getStages() {
@@ -232,6 +238,35 @@ public class WorkForceSizeAlgorithm {
 
     public int getMaxValue() {
         return maxValue;
+    }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        int j = 1;
+        int optimumForce = stages.get(weeks-1).getOptimumForce(0).get(0);
+        sb.append("For week ").append(j).append(" the right number(s) is(are): ").append(optimumForce).append("\n");
+        j++;
+        for(int i = weeks - 2; i >= 0; i--)
+        {
+            sb.append("For week ").append(j).append(" the right number(s) is(are): ");
+            int number = stages.get(i).getOptimumForce(optimumForce).get(0);
+            List<Integer> container = new ArrayList<>();
+            for(Integer number1 : stages.get(i).getOptimumForce(optimumForce))
+            {
+                if(!container.contains(number1))
+                {
+                    sb.append(" ").append(number1);
+                    container.add(number1);
+                }    
+            }
+            container.clear();;
+            optimumForce = number;   
+            sb.append("\n");
+            j++;
+        }
+        return  sb.toString();
     }
     
     

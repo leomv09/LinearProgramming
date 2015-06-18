@@ -25,6 +25,7 @@ public class Stage {
      * Creates a new instance of Stage.
      * @param workers The stage workers.
      * @param PossibleWorkers The possiblilities.
+     * @param Number The stage Number
      */
     public Stage(List<Integer> workers, List<Integer> PossibleWorkers, int Number)
     {
