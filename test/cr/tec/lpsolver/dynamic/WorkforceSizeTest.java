@@ -24,12 +24,19 @@ public class WorkforceSizeTest {
     public void setUp() 
     {
         List<Integer> currentWorkers = new ArrayList<>();
+        currentWorkers.add(9);
+        currentWorkers.add(8);
+        currentWorkers.add(6);
+        currentWorkers.add(7);
+        currentWorkers.add(8);
+        currentWorkers.add(9);
         currentWorkers.add(5);
         currentWorkers.add(7);
         currentWorkers.add(8);
-        currentWorkers.add(4);
-        currentWorkers.add(6);
-        algo = new WorkForceSizeAlgorithm(5, 400, 200, 300, currentWorkers);
+        currentWorkers.add(9);
+        
+        
+        algo = new WorkForceSizeAlgorithm(10, 400, 200, 100, currentWorkers);
     }
     
     @Test
@@ -44,7 +51,7 @@ public class WorkforceSizeTest {
     public void solution()
     {
         algo.solve();
-        assertThat(algo.getStages().get(0).getOptimumForce(algo.getStages().size() - 1).size(), is(1));
-        assertThat(algo.getStages().get(algo.getStages().size() - 1).getAggregateValue(0), is(3300.0));
+        //assertThat(algo.getStages().get(0).getOptimumForce(algo.getStages().size() - 1).size(), is(1));
+        assertThat(algo.getStages().get(algo.getStages().size() - 1).getAggregateValue(0), is(3600.0));
     }
 }

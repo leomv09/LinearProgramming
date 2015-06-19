@@ -94,7 +94,17 @@ public class Stage {
         return number;
     }
     
-    
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        for(Integer number : weekWorkers)
+        {
+            sb.append("For week; ").append(number).append(" Workforce is: ").append(getOptimumForce(number)).append("\n");
+             
+        }
+        return sb.toString();
+    }
     
     
     

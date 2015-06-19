@@ -213,6 +213,7 @@ public class WorkForceSizeAlgorithm {
                 int optimumForce = this.getBestWorkForce(values, stage.getPossibleWorkers(), optimumValue);
                 stage.addOptimumWorkForce(weekWorkNumber, optimumForce);
             }
+            System.out.println(stage);
             prev = stage;
         }
         stages.get(0).getAggregateValue(0);
@@ -262,7 +263,7 @@ public class WorkForceSizeAlgorithm {
                     container.add(number1);
                 }    
             }
-            container.clear();;
+            container.clear();
             optimumForce = number;   
             sb.append("\n");
             j++;
